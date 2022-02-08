@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, navigate } from 'gatsby'
 import { Graph } from 'react-d3-graph'
 import Layout from '../layout/layout'
+import siteConfig from '../../gatsby-config'
 import '../styles/graph.css'
 const makeSlug = require('../utils/make-slug')
 
@@ -44,7 +45,7 @@ export default function Note({ pageContext }) {
 
   const onClickNode = function (nodeId) {
     const slug = makeSlug(nodeId)
-    navigate(`/${slug}`)
+    navigate(siteConfig.siteMetadata.notesPrefix + slug)
   }
 
   // the graph configuration, just override the ones you need

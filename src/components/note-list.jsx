@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, navigate } from 'gatsby'
 import '../styles/note.css'
+import siteConfig from '../../gatsby-config'
 const moment = require('moment')
 
 export default function NoteList({ notes }) {
@@ -13,14 +14,14 @@ export default function NoteList({ notes }) {
           role="button"
           tabIndex={index}
           onClick={() => {
-            navigate(data.node.fields.slug)
+            navigate(siteConfig.siteMetadata.notesPrefix + data.node.fields.slug)
           }}
           onKeyDown={event => {
             if (event.keycode === 13) navigate(data.node.fields.slug)
           }}
         >
           <h4 className="note-title">
-            <Link to={`${data.node.fields.slug}`}>
+            <Link to={siteConfig.siteMetadata.notesPrefix + data.node.fields.slug}>
               {data.node.fields.title}
             </Link>
           </h4>

@@ -3,8 +3,11 @@ import { graphql, Link, navigate } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { Graph } from 'react-d3-graph'
 import Layout from '../layout/layout'
+import siteConfig from '../../gatsby-config'
 import '../styles/note.css'
 import '../styles/graph.css'
+import "katex/dist/katex.min.css"
+
 const makeSlug = require('../utils/make-slug')
 const moment = require('moment')
 
@@ -45,7 +48,7 @@ export default function Note({ pageContext, data }) {
   const onClickNode = function (nodeId) {
     if (nodeId === 'Unlinked') return
     const slug = makeSlug(nodeId)
-    navigate(`/${slug}`)
+    navigate(siteConfig.siteMetadata.notesPrefix + '/' + slug)
   }
 
   // the graph configuration, just override the ones you need
@@ -99,7 +102,7 @@ export default function Note({ pageContext, data }) {
                   <div className="related-wrapper">
                     {pageContext.referredBy.map((note, index) => (
                       <div key={index} className="related-group">
-                        <Link to={`/${makeSlug(note.title)}`}>
+                        <Link to={siteConfig.siteMetadata.notesPrefix + '/' + makeSlug(note.title)}>
                           <h4>{note.title}</h4>
                           <p className="related-excerpt">{note.excerpt}</p>
                         </Link>
@@ -180,10 +183,10 @@ function Source({ src }) {
     // Source given as Wiki Link - internal link - [[Text]]
     const titleParts = src.match(/(.+)\|(.+)/) // [[Note Name|Link Text]] format.
     if (titleParts) {
-      link = <Link to={'/' + makeSlug(titleParts[2])}>{titleParts[1]}</Link>
+      link = <Link to={siteConfig.siteMetadata.notesPrefix + '/' + makeSlug(titleParts[2])}>{titleParts[1]}</Link>
     } else {
       const title = src.replace(new RegExp(/[\[\]]/, 'g'), '') // eslint-disable-line
-      link = <Link to={'/' + makeSlug(title)}>{title}</Link>
+      link = <Link to={siteConfig.siteMetadata.notesPrefix + '/' + makeSlug(title)}>{title}</Link>
     }
   } else {
     // Just an URL given as source

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useStaticQuery, graphql } from 'gatsby'
 import { useFlexSearch } from 'react-use-flexsearch'
+import siteConfig from '../../gatsby-config'
 import '../styles/search.css'
 
 export default function Search({ showExcerpt, size }) {
@@ -41,8 +42,8 @@ export default function Search({ showExcerpt, size }) {
         <div className="search-result">
           <ul>
             {results.map(result => (
-              <li key={result.slug}>
-                <Link to={result.slug}>{result.title}</Link>
+              <li key={siteConfig.siteMetadata.notesPrefix + result.slug}>
+                <Link to={siteConfig.siteMetadata.notesPrefix + result.slug}>{result.title}</Link>
                 {showExcerpt ? <p>{result.excerpt}</p> : null}
               </li>
             ))}

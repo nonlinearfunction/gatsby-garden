@@ -18,8 +18,8 @@ import DarkMode from '../components/dark-mode'
 export default function Header({ title, type, description }) {
   const menu = DefaultMenuStructure('header')
   const pageTitle =
-    (siteConfig.siteMetadata.title || 'Gatsby Garden') +
-    (title ? ` : ${title}` : '')
+    (title ? `${title}: ` : '') +
+    (siteConfig.siteMetadata.title || 'Gatsby Garden')
 
   const handleHamburgerMenuClick = e => {
     const target_id = e.currentTarget.getAttribute('data-target')

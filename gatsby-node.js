@@ -141,7 +141,7 @@ exports.createPages = async ({ graphql, actions }) => {
     const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
 
     createPage({
-      path: node.fields.slug,
+      path: siteConfig.siteMetadata.notesPrefix + node.fields.slug,
       component: path.resolve(`./src/templates/note.jsx`),
       context: {
         title: title,
@@ -154,8 +154,8 @@ exports.createPages = async ({ graphql, actions }) => {
     // Handling Aliases
     for (let j = 0; j < aliases.length; j++) {
       createRedirect({
-        fromPath: `/${makeSlug(aliases[j])}`,
-        toPath: node.fields.slug,
+        fromPath: siteConfig.siteMetadata.notesPrefix + makeSlug(aliases[j]),
+        toPath: siteConfig.siteMetadata.notesPrefix + node.fields.slug,
         redirectInBrowser: true,
         isPermanent: true,
       })
@@ -163,7 +163,7 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   createPage({
-    path: `/note-map`,
+    path: siteConfig.siteMetadata.notesPrefix + '/note-map',
     component: path.resolve(`./src/templates/note-map.jsx`),
     context: {
       allRefersTo: refersTo,
@@ -234,7 +234,7 @@ exports.createPages = async ({ graphql, actions }) => {
     const title = node.fields.title ? node.fields.title : node.frontmatter.title
 
     createPage({
-      path: node.fields.slug,
+      path: siteConfig.siteMetadata.notesPrefix + node.fields.slug,
       component: path.resolve(`./src/templates/note.jsx`),
       context: {
         title: title,
