@@ -6,6 +6,7 @@ import re
 NOTES_STAGING_DIR = '/home/dave/sync/suffering'
 NOTES_DIR = '/home/dave/my-gatsby-garden/_notes'
 
+FIX_BLOCK_MATH_SUBSTITUTION = (r'(\n?)\$\$(\n?)', '\n$$\n')
 
 def strip_front_matter(md_string):
     return re.sub(r'---\n(.+\n)+---\n', '', md_string)
@@ -37,10 +38,7 @@ def read_private_names():
         if not name:
             continue
         if len(r) == 1:
-            m = hashlib.sha256()
-            m.update(name.lower().encode('utf-8'))
-            m.update('salt_for_substitutions_from_name_line'.encode('utf-8'))
-            safe_name = 'Person_' + m.hexdigest()[:4]
+            safe_name = 'NameRedacted'
         elif len(r) == 2:
             safe_name = r[1].strip()
         else:
@@ -59,10 +57,9 @@ def get_name_variants(name):
 def get_substitutions(footnote=''):
     """Builds the overall list of substitutions (including names) to apply."""
     substitutions = list(get_explicit_substitutions())
+    substitutions.append(FIX_BLOCK_MATH_SUBSTITUTION)
     for name, safe_name in read_private_names():
         for variant in get_name_variants(name):
-            # TODO: handle non-space usage like 'Andre/Teddy' or 'Frank Wood:'
-            # TODO: also apply substitutions to filenames
             # TODO: include footnotes
             # TODO: somehow handle out-of-band usage so that 'Daniel Dennett' doesn't end up as 'Person_XXXX Dennett'
             substitutions.append((r'(\b)' + variant + r'(\b)', r'\g<1>' + safe_name + footnote + r'\g<2>'))

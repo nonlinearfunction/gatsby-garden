@@ -13,8 +13,6 @@ import {
   MenuItemExternalLink,
 } from '../utils/menu-structure'
 
-import DarkMode from '../components/dark-mode'
-
 export default function Header({ title, type, description }) {
   const menu = DefaultMenuStructure('header')
   const pageTitle =
@@ -96,9 +94,6 @@ export default function Header({ title, type, description }) {
             </svg>
             <h4>{siteConfig.siteMetadata.title || 'Gatsby Garden'}</h4>
           </Link>
-          <div className="navbar-item navbar-dark-mode__mobile is-hidden-tablet">
-            <DarkMode />
-          </div>
           <button
             className="navbar-burger button-link"
             aria-label="menu"
@@ -150,9 +145,6 @@ export default function Header({ title, type, description }) {
           <div className="navbar-end is-hidden-mobile">
             <div className="navbar-item">
               <Search size="small" showExcerpt={false} />
-            </div>
-            <div className="navbar-item">
-              <DarkMode />
             </div>
           </div>
         </div>
