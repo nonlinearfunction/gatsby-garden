@@ -1,7 +1,6 @@
 import React from 'react'
-import { graphql, Link, navigate } from 'gatsby'
+import { graphql, Link } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
-import { Graph } from 'react-d3-graph'
 import Layout from '../layout/layout'
 import siteConfig from '../../gatsby-config'
 import '../styles/note.css'
@@ -13,57 +12,6 @@ const moment = require('moment')
 
 export default function Note({ pageContext, data }) {
   const post = data.mdx
-
-  // Create the data for the graph visualisation for the note linking.
-  const graphData = {
-    nodes: [{ id: post.fields.title, color: 'black' }],
-    links: [],
-    focusedNodeId: post.fields.title,
-  }
-
-  // Links to the current Note
-  for (let i = 0; i < pageContext.referredBy.length; i++) {
-    const refNoteTitle = pageContext.referredBy[i].title
-    graphData.nodes.push({ id: refNoteTitle })
-    graphData.links.push({ source: refNoteTitle, target: post.fields.title })
-  }
-
-  // Links from the current Note
-  for (let i = 0; i < pageContext.refersTo.length; i++) {
-    const refNoteTitle = pageContext.refersTo[i]
-    graphData.nodes.push({ id: refNoteTitle })
-    graphData.links.push({ source: post.fields.title, target: refNoteTitle })
-  }
-
-  // If this is an orphan note(no links to and from other notes), we need some hackery to get it to work.
-  if (graphData.nodes.length === 1) {
-    graphData.nodes.push({ id: 'No Links', color: '#eee', fontColor: '#999' })
-    graphData.links.push({
-      source: post.fields.title,
-      target: 'No Links',
-      color: '#eee',
-    })
-  }
-
-  const onClickNode = function (nodeId) {
-    if (nodeId === 'Unlinked') return
-    const slug = makeSlug(nodeId)
-    navigate(siteConfig.siteMetadata.notesPrefix + '/' + slug)
-  }
-
-  // the graph configuration, just override the ones you need
-  const graphConfig = {
-    automaticRearrangeAfterDropNode: true,
-    directed: true,
-    initialZoom: 1.4,
-    // nodeHighlightBehavior: true,
-    node: {
-      color: 'gray',
-      size: 120,
-      fontSize: 10,
-    },
-  }
-
   return (
     <Layout title={post.fields.title} type="note">
       <div className="column is-three-fifths">
@@ -141,15 +89,6 @@ export default function Note({ pageContext, data }) {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="note-graph">
-              <Graph
-                id="note-link-graph"
-                data={graphData}
-                config={graphConfig}
-                onClickNode={onClickNode}
-              />
             </div>
           </div>
         </main>
