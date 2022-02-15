@@ -8,7 +8,7 @@ export default function Sitemap({ pageContext, data }) {
   return (
     <Layout>
       <div className="column is-half">
-        <h1>Sitemap</h1>
+        <h1>All Notes</h1>
 
         <NoteList notes={data.notes.edges} />
 
@@ -26,6 +26,7 @@ export const query = graphql`
       skip: $skip
       limit: $limit
       filter: { fields: { visibility: { eq: "public" } } }
+      sort: { fields: [slug] , order: ASC }
     ) {
       edges {
         node {

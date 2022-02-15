@@ -2,9 +2,9 @@ import React from 'react'
 import { Link, navigate } from 'gatsby'
 import '../styles/note.css'
 import siteConfig from '../../gatsby-config'
-const moment = require('moment')
 
 export default function NoteList({ notes }) {
+  notes.sort((data, index) => {return data.node.fields.slug})
   return (
     <div className="block note-cards note-list">
       {notes.map((data, index) => (
@@ -40,9 +40,6 @@ export default function NoteList({ notes }) {
                   </span>
                 ))
               : 'No Tags'}
-          </p>
-          <p className="note-date">
-            Published on {moment(new Date(data.node.fields.date)).fromNow()}
           </p>
         </div>
       ))}

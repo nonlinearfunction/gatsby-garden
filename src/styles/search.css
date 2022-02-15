@@ -24,6 +24,10 @@ form .search-result ul {
   margin: 0;
   padding: 0;
 }
+form .search-result li {
+  border-bottom-style: dotted;
+  border-width: 1px
+}
 
 .search-result p {
   padding-left: 1rem;

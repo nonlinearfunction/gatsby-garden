@@ -1,6 +1,6 @@
-import hashlib
 import itertools
 import os
+import shutil
 import re
 
 NOTES_STAGING_DIR = '/home/dave/sync/suffering'
@@ -73,8 +73,8 @@ def apply_substitutions(markdown, substitutions):
 substitutions = get_substitutions()
 
 # Remove all existing notes.
-for filename in os.listdir(NOTES_DIR):
-    os.remove(os.path.join(NOTES_DIR, filename))
+shutil.rmtree(NOTES_DIR)
+os.mkdir(NOTES_DIR)
 
 for filename in os.listdir(NOTES_STAGING_DIR):
     if not filename.endswith('.md'):

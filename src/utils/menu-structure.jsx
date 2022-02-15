@@ -120,7 +120,7 @@ export function MenuItemPage({ item, className }) {
 
 export function MenuItemNote({ item, className }) {
   return (
-    <Link className={className} to={`/${item.item}`}>
+    <Link className={className} to={siteConfig.siteMetadata.notesPrefix + `/${item.item}`}>
       {item.title ? item.title : startCase(camelCase(item.item))}
     </Link>
   )

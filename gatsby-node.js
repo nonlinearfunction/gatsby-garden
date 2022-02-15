@@ -163,7 +163,7 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   createPage({
-    path: siteConfig.siteMetadata.notesPrefix + '/note-map',
+    path: '/note-map',
     component: path.resolve(`./src/templates/note-map.jsx`),
     context: {
       allRefersTo: refersTo,

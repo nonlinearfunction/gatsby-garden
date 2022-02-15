@@ -1,82 +1,36 @@
 import React from 'react'
-import { graphql, useStaticQuery, Link } from 'gatsby'
-import { MDXRenderer } from "gatsby-plugin-mdx"
+import { Link } from 'gatsby'
 
 import Layout from '../layout/layout'
 import siteConfig from '../../gatsby-config'
-import NoteList from '../components/note-list'
-import Search from '../components/search'
+import TagListComponent from '../components/tag-list'
 import '../styles/index.css'
-import { DefaultMenuStructure, MenuRoot } from '../utils/menu-structure'
 
 export default function Home() {
-  const data = useStaticQuery(graphql`
-    query HomeQuery {
-      homeNote: mdx(fields: { slug: { eq: "/home" } }) {
-        body
-        fields {
-          title
-          date
-        }
-        frontmatter {
-          tags
-        }
-      }
-      notes: allMdx(
-        filter: { fields: { visibility: { eq: "public" } } }
-        limit: 5
-        sort: { fields: fields___date, order: DESC }
-      ) {
-        edges {
-          node {
-            excerpt
-            fields {
-              slug
-              title
-              date
-            }
-            frontmatter {
-              tags
-            }
-          }
-        }
-      }
-    }
-  `)
-
-  const tagList = DefaultMenuStructure('tag-list')
-
-  return data.homeNote ? (
-    <Layout title={data.homeNote.fields.title} type="home">
-      <div className="column is-half">
-        <div className="note-area">
-          <h1 className="note-title">{data.homeNote.fields.title}</h1>
-          <MDXRenderer title="note-content">{data.homeNote.body}</MDXRenderer>
-        </div>
-      </div>
-    </Layout>
-  ) : (
+  return (
     <Layout title="Home" type="home">
       <div className="column is-half">
         <div className="block">
           <h1>{siteConfig.siteMetadata.title}</h1>
-          <p className="lead">{siteConfig.siteMetadata.description}</p>
+          Welcome to my <Link to="https://maggieappleton.com/garden-history">digital garden</Link>: a loose
+          collection of interlinked notes with no particular linear structure. These span a wide range of
+          topics: from technical material, to informal concepts, to reflections on my own experiences. They are
+          unapologetically connected, representing my own personal view-in-progress on how ideas might fit
+          together. Disclaimers:
+          <ul>
+            <li>There's no attempt at completeness: notes may fail to explain relevant background (especially
+              if it's something I already know well), and important concepts may be missing.</li>
+            <li>Many notes are unpolished, unfinished, or redundant.</li>
+            <li>Many of the ideas are bad, and these will not in general be labeled as such. Notes that
+              attempt to articulate a position may not represent my current belief, or even my belief at
+              the time of writing.</li>
+            <li>Some information may be flat-out incorrect.</li>
+          </ul>
         </div>
-
-        <div className="block tag-list">
-          <MenuRoot menu={tagList} />
+        <div className="block" style={{display: 'block'}}>
+          <h4>Tags:</h4>
+          <TagListComponent />
         </div>
-
-        <div className="block">
-          <Search size="medium" showExcerpt={true} />
-        </div>
-
-        <div className="block">
-          <NoteList notes={data.notes.edges} />
-        </div>
-
-        <br />
-        <Link to="/sitemap">All Notes...</Link>
       </div>
     </Layout>
   )

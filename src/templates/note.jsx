@@ -8,7 +8,6 @@ import '../styles/graph.css'
 import "katex/dist/katex.min.css"
 
 const makeSlug = require('../utils/make-slug')
-const moment = require('moment')
 
 export default function Note({ pageContext, data }) {
   const post = data.mdx
@@ -64,10 +63,6 @@ export default function Note({ pageContext, data }) {
                 <h5 className="block-title">Meta</h5>
                 <div className="related-wrapper">
                   <div className="related-group">
-                    <p>
-                      <strong className="note-meta-title">Published on: </strong>{' '}
-                      {moment(new Date(post.fields.date)).format('Do MMMM, YYYY')}
-                    </p>
                     {post.frontmatter.source ? (
                       <Source src={post.frontmatter.source} />
                     ) : null}
@@ -149,7 +144,6 @@ export const query = graphql`
       body
       fields {
         title
-        date
       }
       frontmatter {
         tags

@@ -7,18 +7,10 @@ module.exports = {
     siteUrl: `https://nonlinearfunction.org/`, // URL at which your site will be published. This should be present if you want RSS feed.
     notesPrefix: `/notes`,
     headerMenu: [ // Top Navbar items
-       {type: 'page', item: '', title: 'Home'}, // Type can be 'page', 'note', 'tag', or 'link'
-       {type: 'page', item: 'sitemap', title: 'Sitemap'},
-       {type: 'page', item: 'tags', title: 'Tags'}
+       {type: 'note', item: 'about', title: 'About'}, // Type can be 'page', 'note', 'tag', or 'link'
+       {type: 'page', item: 'sitemap', title: 'All Notes'},
+       {type: 'page', item: 'tags', title: 'Tags'},
      ],
-
-    menu: [ // This is the Table of Contents that comes in the home page if a Home Note is not specified. It can be much longer than the header menu.
-	//   ... Same structure as headerMenu. You can have any depth level - multiple menus can be nested.
-
-	{type: 'note',item: 'attention'},
-        {type: 'note',item: 'identity'},
-
-    ]
   },
   plugins: [
     `gatsby-plugin-sharp`,
@@ -43,6 +35,9 @@ module.exports = {
         ],
         rehypePlugins: [require("rehype-katex")],
         gatsbyRemarkPlugins: [
+          {
+            resolve: "@weknow/gatsby-remark-twitter",
+          },
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
