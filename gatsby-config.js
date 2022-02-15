@@ -36,9 +36,6 @@ module.exports = {
         rehypePlugins: [require("rehype-katex")],
         gatsbyRemarkPlugins: [
           {
-            resolve: "@weknow/gatsby-remark-twitter",
-          },
-          {
             resolve: `gatsby-remark-prismjs`,
             options: {
               // Class prefix for <pre> tags containing syntax highlighting;

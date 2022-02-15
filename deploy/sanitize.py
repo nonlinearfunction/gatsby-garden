@@ -73,7 +73,8 @@ def apply_substitutions(markdown, substitutions):
 substitutions = get_substitutions()
 
 # Remove all existing notes.
-shutil.rmtree(NOTES_DIR)
+if os.path.exists(NOTES_DIR):
+  shutil.rmtree(NOTES_DIR)
 os.mkdir(NOTES_DIR)
 
 for filename in os.listdir(NOTES_STAGING_DIR):
