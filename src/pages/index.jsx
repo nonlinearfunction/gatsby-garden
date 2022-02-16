@@ -13,7 +13,8 @@ export default function Home() {
         <div className="block">
           <h1>{siteConfig.siteMetadata.title}</h1>
           Welcome to this view inside my unreliable mind.
-          Feel free to explore, or read more <Link to='/notes/about'>about this site</Link>.
+          Feel free to explore, or read more <Link to="/notes/about">about this site</Link>.
+        </div>
         <div className="block" style={{display: 'block'}}>
           <h4>Tags:</h4>
           <TagListComponent />
