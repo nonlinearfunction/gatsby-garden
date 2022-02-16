@@ -40,6 +40,7 @@
     "gatsby-plugin-remove-trailing-slashes": "^4.2.0",
     "gatsby-plugin-sharp": "^4.4.0",
     "gatsby-plugin-styled-components": "^5.7.0",
+    "gatsby-remark-autolink-headers": "^5.7.0",
     "gatsby-remark-double-brackets-link": "^0.1.11",
     "gatsby-remark-footnotes": "^0.0.8",
     "gatsby-remark-images": "^6.4.0",

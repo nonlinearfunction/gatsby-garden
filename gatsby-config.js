@@ -101,6 +101,10 @@ module.exports = {
             },
           },
           {
+            resolve: `gatsby-remark-autolink-headers`,
+            options: {},
+          },
+          {
             resolve: `gatsby-remark-images`,
             options: {
               maxWidth: 1200,
