@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from './header'
+import '../styles/tufte.css'
 
 export default function Layout({ children, title, type }) {
   return (

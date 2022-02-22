@@ -126,7 +126,8 @@ module.exports = {
               slugify: `${__dirname}/src/utils/make-slug.js`,
               stripBrackets: true
             }
-          }
+          },
+          `gatsby-remark-tufte`,
         ],
       },
     },
