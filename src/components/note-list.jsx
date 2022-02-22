@@ -17,7 +17,7 @@ export default function NoteList({ notes }) {
             navigate(siteConfig.siteMetadata.notesPrefix + data.node.fields.slug)
           }}
           onKeyDown={event => {
-            if (event.keycode === 13) navigate(data.node.fields.slug)
+            if (event.keycode === 13) navigate(siteConfig.siteMetadata.notesPrefix + data.node.fields.slug)
           }}
         >
           <h4 className="note-title">

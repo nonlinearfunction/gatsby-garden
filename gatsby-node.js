@@ -181,7 +181,7 @@ exports.createPages = async ({ graphql, actions }) => {
     paginate({
       createPage,
       items: taggedNotes,
-      itemsPerPage: 10,
+      itemsPerPage: 50,
       pathPrefix: `/tags/${makeSlug(tag.fieldValue)}`,
       component: path.resolve(`./src/templates/tag.jsx`),
       context: {
@@ -199,7 +199,7 @@ exports.createPages = async ({ graphql, actions }) => {
   paginate({
     createPage,
     items: allNotes,
-    itemsPerPage: 10,
+    itemsPerPage: 50,
     pathPrefix: `/sitemap`,
     component: path.resolve(`./src/templates/sitemap.jsx`),
   })

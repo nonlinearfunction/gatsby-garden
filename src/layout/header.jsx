@@ -17,7 +17,7 @@ export default function Header({ title, type, description }) {
   const menu = DefaultMenuStructure('header')
   const pageTitle =
     (title ? `${title}: ` : '') +
-    (siteConfig.siteMetadata.title || 'Gatsby Garden')
+    (siteConfig.siteMetadata.title)
 
   const handleHamburgerMenuClick = e => {
     const target_id = e.currentTarget.getAttribute('data-target')
@@ -72,21 +72,12 @@ export default function Header({ title, type, description }) {
       >
         <div className="navbar-brand">
           <Link className="navbar-item" to="/">
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 80 80"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M36.9477 13.7742C38.3043 11.4086 41.6957 11.4086 43.0523 13.7742L70.5226 61.6774C71.8791 64.043 70.1834 67 67.4703 67H12.5297C9.81658 67 8.12089 64.043 9.47744 61.6774L36.9477 13.7742ZM40 16.9677L13.7506 62.7419H66.2494L40 16.9677Z"
-                fill="var(--text-main)"
-              />
-            </svg>
-            <h4>{siteConfig.siteMetadata.title || 'Gatsby Garden'}</h4>
+          <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <path transform="rotate(-180 18.5 28.5)" stroke-width="4" stroke="#333333" id="svg_1" d="m3,11.08537m3.60465,-8.08537m1.44186,51c0.72093,-5.59756 12.25581,-45.71341 17.66279,-4.35366c5.40698,-17.72561 7.2093,-14.30488 8.2907,-21.14634" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+          </g>
+          </svg>
+            <h4>{siteConfig.siteMetadata.title}</h4>
           </Link>
           <button
             className="navbar-burger button-link"
