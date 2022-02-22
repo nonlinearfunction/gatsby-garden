@@ -1,5 +1,6 @@
 module.exports = {
   pathPrefix: `/`, // If your Digital Garden is not published at the root of your website, use this.
+  trailingSlash: `never`,
   siteMetadata: {
     title: `Nonlinear Function`,
     description: `A Digital Garden Tended by Gatsby`,
@@ -15,7 +16,6 @@ module.exports = {
   plugins: [
     `gatsby-plugin-sharp`,
     `gatsby-remark-images`,
-    `gatsby-plugin-remove-trailing-slashes`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
