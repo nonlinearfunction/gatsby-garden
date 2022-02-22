@@ -77,10 +77,18 @@ if os.path.exists(NOTES_DIR):
   shutil.rmtree(NOTES_DIR)
 os.mkdir(NOTES_DIR)
 
-for filename in os.listdir(NOTES_STAGING_DIR):
-    if not filename.endswith('.md'):
-        print(f"skipping non-markdown file {filename}")
-        continue
+md_files = [s for s in os.listdir(NOTES_STAGING_DIR) if s.endswith('.md')]
+
+# Ensure no duplicates with conflicting capitalization.
+canonical_capitalization = {}
+for filename in md_files:
+    if filename.lower() in canonical_capitalization:
+        raise ValueError(
+            f'Saw notes with conflicting capitalizations {filename} and {canonical_capitalization[filename.lower()]}')
+    canonical_capitalization[filename.lower()] = filename
+
+
+for filename in md_files:
     with open(os.path.join(NOTES_STAGING_DIR, filename), 'r') as f:
         md_string = f.read()
     
