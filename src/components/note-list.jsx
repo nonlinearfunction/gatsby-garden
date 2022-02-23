@@ -8,22 +8,18 @@ export default function NoteList({ notes }) {
   return (
     <div className="block note-cards note-list">
       {notes.map((data, index) => (
+        <Link to={siteConfig.siteMetadata.notesPrefix + data.node.fields.slug}>
         <div
           className="note-area box-feed"
           key={index}
           role="button"
           tabIndex={index}
-          onClick={() => {
-            navigate(siteConfig.siteMetadata.notesPrefix + data.node.fields.slug)
-          }}
           onKeyDown={event => {
             if (event.keycode === 13) navigate(siteConfig.siteMetadata.notesPrefix + data.node.fields.slug)
           }}
         >
           <h4 className="note-title">
-            <Link to={siteConfig.siteMetadata.notesPrefix + data.node.fields.slug}>
               {data.node.fields.title}
-            </Link>
           </h4>
           <p className="note-excerpt">
             {data.node.fields.excerpt
@@ -34,14 +30,12 @@ export default function NoteList({ notes }) {
             Tagged with:{' '}
             {data.node.frontmatter && data.node.frontmatter.tags
               ? data.node.frontmatter.tags.map((tag, index) => (
-                  <span key={index}>
-                    <Link to={`/tags/${tag}`}>#{tag}</Link>
-                    {index < data.node.frontmatter.tags.length - 1 ? ', ' : ''}
-                  </span>
+                  <span>#{tag}</span>
                 ))
               : 'No Tags'}
           </p>
         </div>
+        </Link>
       ))}
     </div>
   )
