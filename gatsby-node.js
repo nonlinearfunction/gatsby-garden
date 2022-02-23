@@ -162,15 +162,6 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   }
 
-  createPage({
-    path: '/note-map',
-    component: path.resolve(`./src/templates/note-map.jsx`),
-    context: {
-      allRefersTo: refersTo,
-      allReferredBy: referredBy,
-    },
-  })
-
   // Handle all tag pages.
   result.data.tags.group.forEach(tag => {
     const taggedNotes = allNotes.filter(note =>
