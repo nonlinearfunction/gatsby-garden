@@ -278,7 +278,7 @@ exports.createSchemaCustomization = ({ actions }) => {
 
 function findReferences(content) {
   // Handles both [[Note Title]] and [[Note Title|text to show]] formats
-  const linkRegex = /\[\[([^\]\|]+)(\|.+)?\]\]/g
+  const linkRegex = /\[\[([^\]\|]+)(\|[^\]]+)?\]\]/g
   const links = [...content.matchAll(linkRegex)]
 
   const matchedNotes = links.map(lnk => lnk[1])
