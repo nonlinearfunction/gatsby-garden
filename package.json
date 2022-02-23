@@ -42,7 +42,7 @@
     "gatsby-remark-autolink-headers": "^5.7.0",
     "gatsby-remark-double-brackets-link": "^0.1.11",
     "gatsby-remark-images": "^6.4.0",
-    "gatsby-remark-prismjs": "^6.7.0",
+    "gatsby-remark-prismjs": "^6.8.0",
     "gatsby-remark-tufte": "github:nonlinearfunction/gatsby-remark-tufte",
     "gatsby-source-filesystem": "^4.4.0",
     "gatsby-transformer-remark": "^5.7.0",

@@ -90,11 +90,6 @@ main {
     margin-bottom: 1rem;
 }
 
-.navbar-item.navbar-dark-mode__mobile {
-    flex-grow: 1;
-    justify-content: flex-end;
-}
-
 @media screen and (min-width: 768px) {
     .buttons.for-back-home:not(:last-child) {
         margin-left: 2rem;
@@ -217,7 +212,7 @@ h6 {
 
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: sans-serif;
 }
 
 p a,
@@ -262,7 +257,7 @@ code {
     font-family: Consolas, 'Courier New', Courier, monospace;
     display: inline-block;
     overflow: auto !important;
-    white-space: pre-line !important;       
+    white-space: pre-wrap !important;       
     word-wrap: break-word !important;       
     padding: 2px 2px  2px 2px;
     vertical-align:middle;
@@ -290,7 +285,7 @@ pre code {
     font-family: Consolas, 'Courier New', Courier, monospace;
     display: inline-block;
     overflow: auto !important;
-    white-space: pre-line !important;       
+    white-space: pre-wrap !important;        
     word-wrap: break-word !important;       
     padding: 15px 15px  15px 15px;
     vertical-align:middle;
