@@ -19,14 +19,6 @@ export default function Header({ title, type, description }) {
     (title ? `${title}: ` : '') +
     (siteConfig.siteMetadata.title)
 
-  const handleHamburgerMenuClick = e => {
-    const target_id = e.currentTarget.getAttribute('data-target')
-    const target = document.getElementById(target_id)
-
-    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-    e.currentTarget.classList.toggle('is-active')
-    target.classList.toggle('is-active')
-  }
 
   // :TODO:
   // <meta content="{{ site.url }}{{ page.url }}" property="og:url"> - NOTE: site.url might NOT be there in the config file.
@@ -79,19 +71,7 @@ export default function Header({ title, type, description }) {
           </svg>
             <h4>{siteConfig.siteMetadata.title}</h4>
           </Link>
-          <button
-            className="navbar-burger button-link"
-            aria-label="menu"
-            aria-expanded="false"
-            data-target="navbar-main"
-            onClick={handleHamburgerMenuClick}
-          >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </button>
         </div>
-
         <div className="navbar-menu" id="navbar-main">
           <div className="navbar-start">
             {menu.map((item, index) => {
@@ -127,7 +107,7 @@ export default function Header({ title, type, description }) {
               )
             })}
           </div>
-          <div className="navbar-end is-hidden-mobile">
+          <div className="navbar-end">
             <div className="navbar-item">
               <Search size="small" showExcerpt={true} />
             </div>
