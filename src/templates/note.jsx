@@ -13,7 +13,7 @@ export default function Note({ pageContext, data }) {
   const post = data.mdx
   return (
     <Layout title={post.fields.title} type="note">
-      <div className="column is-three-fifths">
+      <div className="column is-half">
         <main>
           <div className="note-area note-page-section">
             <div className="buttons for-back-home">

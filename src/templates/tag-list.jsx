@@ -6,7 +6,7 @@ export default function TagList() {
 
   return (
     <Layout title="All Tags" type="tag">
-      <div className="column is-half">
+      <div className="column is-one-third">
           <h1>All Tags</h1>
           <TagListComponent></TagListComponent>
       </div>

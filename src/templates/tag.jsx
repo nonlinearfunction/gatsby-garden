@@ -13,7 +13,7 @@ export default function Tag({ pageContext, data }) {
 
   return (
     <Layout title={`Notes tagged with "${tag}"`} type="tag">
-      <div className="column is-half">
+      <div className="column is-one-third">
         <h1>{heading}</h1>
 
         <NoteList notes={edges} />
