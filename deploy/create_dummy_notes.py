@@ -2,7 +2,7 @@ import os
 import re
 import collections
 
-NOTES_DIR = '/home/dave/nonlinaerfunction/gatsby-garden/_notes'
+NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
 
 md_files = [fname for fname in os.listdir(NOTES_DIR) if fname.endswith('.md')]
 
