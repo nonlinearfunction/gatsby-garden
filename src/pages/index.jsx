@@ -9,7 +9,7 @@ import '../styles/index.css'
 export default function Home() {
   return (
     <Layout title="Home" type="home">
-      <div className="column is-one-third">
+      <div className="column is-half">
         <div className="block">
           <h1>{siteConfig.siteMetadata.title}</h1>
           Welcome to this view inside my unreliable mind.

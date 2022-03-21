@@ -7,7 +7,7 @@ import Pager from '../components/pager'
 export default function Sitemap({ pageContext, data }) {
   return (
     <Layout>
-      <div className="column is-one-third">
+      <div className="column is-half">
         <h1>All Notes</h1>
 
         <NoteList notes={data.notes.edges} />

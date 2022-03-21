@@ -13,9 +13,13 @@ export default function Note({ pageContext, data }) {
   const post = data.mdx
   return (
     <Layout title={post.fields.title} type="note">
-      <div className="column is-half">
+      <div className="column is-two-thirds">
         <main>
           <div className="note-area note-page-section">
+          <div className="note-dates">
+              <span className='note-dates-label'>Created:</span> {post.frontmatter.created}<br/>
+              <span className='note-dates-label'>Modified:</span> {post.frontmatter.modified}
+            </div>
             <div className="buttons for-back-home">
               <Link className="button is-text button__page-back" to="/">
                 <span className="icon is-small">
@@ -148,6 +152,8 @@ export const query = graphql`
       frontmatter {
         tags
         source
+        modified(formatString: "MMMM DD, YYYY")
+        created(formatString: "MMMM DD, YYYY")
       }
     }
   }

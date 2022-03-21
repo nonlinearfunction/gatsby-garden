@@ -77,6 +77,8 @@ exports.createPages = async ({ graphql, actions }) => {
               title
               date
               aliases
+              created
+              modified
             }
             excerpt
             rawBody
@@ -148,6 +150,8 @@ exports.createPages = async ({ graphql, actions }) => {
         slug: node.fields.slug,
         refersTo: refersTo[title] ? refersTo[title] : [],
         referredBy: referredBy[title] ? referredBy[title] : [],
+        created: node.frontmatter.created,
+        modified: node.frontmatter.modified,
       },
     })
 
@@ -212,6 +216,8 @@ exports.createPages = async ({ graphql, actions }) => {
               title
               date
               aliases
+              created
+              modified
             }
             excerpt
             rawBody
@@ -232,6 +238,8 @@ exports.createPages = async ({ graphql, actions }) => {
         slug: node.fields.slug,
         refersTo: refersTo[title] ? refersTo[title] : [],
         referredBy: referredBy[title] ? referredBy[title] : [],
+        created: node.frontmatter.created,
+        modified: node.frontmatter.modified
       },
     })
   }

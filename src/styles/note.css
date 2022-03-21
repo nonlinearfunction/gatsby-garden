@@ -7,6 +7,16 @@
   border-bottom-right-radius: 10px;
 }
 
+.note-dates {
+  font-size: 50%;
+  opacity: 50%;
+  float: right;
+}
+
+.note-dates-label {
+  font-variant: small-caps;
+}
+
 .note-tags h6,
 .note-tags ul,
 .note-tags li {
