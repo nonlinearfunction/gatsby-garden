@@ -1,14 +1,14 @@
 #!/bin/bash
 
-
-rm -r /home/dave/my-gatsby-garden/_notes_old
-mv /home/dave/my-gatsby-garden/_notes /home/dave/my-gatsby-garden/_notes_old
-
+rm -r /home/dave/nonlinearfunction/gatsby-garden
 set -e
-python3 /home/dave/my-gatsby-garden/deploy/sanitize.py
-python3 /home/dave/my-gatsby-garden/deploy/create_dummy_notes.py
-mkdir /home/dave/my-gatsby-garden/_notes/attachments/
-cp /home/dave/sync/suffering/attachments/* /home/dave/my-gatsby-garden/_notes/attachments/
-cd /home/dave/my-gatsby-garden/
+
+cd /home/dave/nonlinearfunction/
+git clone https://github.com/nonlinearfunction/gatsby-garden.git
+python3 /home/dave/nonlinearfunction/gatsby-garden/deploy/sanitize.py
+python3 /home/dave/nonlinearfunction/gatsby-garden/deploy/create_dummy_notes.py
+mkdir /home/dave/nonlinearfunction/gatsby-garden/_notes/attachments/
+cp /home/dave/sync/suffering/attachments/* /home/dave/nonlinearfunction/gatsby-garden/_notes/attachments/
+cd /home/dave/nonlinearfunction/gatsby-garden/
 gatsby clean
 gatsby build

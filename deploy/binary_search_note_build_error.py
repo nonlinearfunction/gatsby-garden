@@ -5,8 +5,8 @@ import shutil
 import subprocess
 
 NOTES_STAGING_DIR = '/home/dave/sync/suffering'
-NOTES_DIR = '/home/dave/my-gatsby-garden/_notes'
-GATSBY_DIR = '/home/dave/my-gatsby-garden/'
+NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
+GATSBY_DIR = '/home/dave/nonlinearfunction/gatsby-garden/'
 
 def reset_notes_dir():
     if os.path.exists(NOTES_DIR):

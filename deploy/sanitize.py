@@ -4,7 +4,7 @@ import shutil
 import re
 
 NOTES_STAGING_DIR = '/home/dave/sync/suffering'
-NOTES_DIR = '/home/dave/my-gatsby-garden/_notes'
+NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
 
 FIX_BLOCK_MATH_SUBSTITUTION = (r'(\n?)\$\$(\n?)', '\n$$\n')
 
