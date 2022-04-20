@@ -8,7 +8,7 @@ import '../styles/index.css'
 
 export default function Home() {
   return (
-    <Layout title="Home" type="home">
+    <Layout title="Home" type="home" description="Welcome to this view inside my unreliable mind.">
       <div className="column is-half">
         <div className="block">
           <h1>{siteConfig.siteMetadata.title}</h1>

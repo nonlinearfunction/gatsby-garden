@@ -32,6 +32,7 @@ export default function Header({ title, type, description }) {
         {description ? (
           <meta content={description} property="og:description" />
         ) : null}
+        <meta content='/img/favicon.png' property="og:image" />
 
         {type === 'note' ? (
           <meta content="article" property="og:type"></meta>
