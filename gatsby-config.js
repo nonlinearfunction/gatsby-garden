@@ -9,7 +9,7 @@ module.exports = {
     notesPrefix: `/notes`,
     headerMenu: [ // Top Navbar items
        {type: 'note', item: 'about', title: 'About'}, // Type can be 'page', 'note', 'tag', or 'link'
-       {type: 'page', item: 'sitemap', title: 'All Notes'},
+       {type: 'page', item: 'all', title: 'All Notes'},
        {type: 'page', item: 'tags', title: 'Tags'},
      ],
   },
@@ -139,7 +139,64 @@ module.exports = {
     //     display: `swap`,
     //   },
     // },
+    {
+      resolve: "gatsby-plugin-sitemap",
+      options: {
+        output: '/',
+        query: `
+        {
+          site {
+            siteMetadata {
+              siteUrl
+              notesPrefix
+            }
+          }
+          allSitePage {
+            nodes {
+              path
+            }
+          }
+          allMdx(filter: {
+            fields: { visibility: { eq: "public" } }
+          }) {
+            nodes {
+              fields {
+                slug
+              }
+              frontmatter {
+                modified
+              }
+            }
+          }
+        }`,
+        resolvePages: ({
+          allSitePage: { nodes: allPages },
+          allMdx: { nodes: allPosts },
+        }) => {
+          const pathToDateMap = {};
+          allPosts.map(post => {
+            pathToDateMap['/notes' + post.fields.slug] = post.frontmatter.modified;
+          });
+      
+          const pages = allPages.map(page => {
+            return { ...page, ...{date : pathToDateMap[page.path]} };
+          });
 
+          return pages;
+        },
+        serialize: ({ path, date }) => {
+          let entry = {
+            url: path,
+          };
+
+          if (date) {
+            entry.lastmod = date;
+          }
+      
+          return entry;
+        }
+      },
+    },
     {
       resolve: 'gatsby-plugin-local-search',
       options: {
