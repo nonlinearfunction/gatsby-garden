@@ -12,7 +12,7 @@ const makeSlug = require('../utils/make-slug')
 export default function Note({ pageContext, data }) {
   const post = data.mdx
   return (
-    <Layout title={post.fields.title} type="note">
+    <Layout title={post.fields.title} type="note" description={post.excerpt}>
       <div className="column is-two-thirds">
         <main>
           <div className="note-area note-page-section">
@@ -146,6 +146,7 @@ export const query = graphql`
   query($slug: String!) {
     mdx(fields: { slug: { eq: $slug } }) {
       body
+      excerpt(pruneLength: 280)
       fields {
         title
       }
