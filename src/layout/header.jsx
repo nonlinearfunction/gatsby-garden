@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'gatsby'
-import { Helmet } from 'react-helmet'
 import { startCase, camelCase } from 'lodash'
 import siteConfig from '../../gatsby-config'
 import Search from '../components/search'
@@ -25,38 +24,36 @@ export default function Header({ title, type, description }) {
 
   return (
     <>
-      <Helmet>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <meta content={siteConfig.siteMetadata.title} property="og:site_name" />
-        <meta content={title ? title : pageTitle} property="og:title" />
-        {description ? (
-          <meta content={description} property="og:description" />
-        ) : null}
-        <meta content='/img/favicon.png' property="og:image" />
+      <meta content="width=device-width, initial-scale=1" name="viewport" />
+      <meta content={siteConfig.siteMetadata.title} property="og:site_name" />
+      <meta content={title ? title : pageTitle} property="og:title" />
+      {description ? (
+        <meta content={description} property="og:description" />
+      ) : null}
+      <meta content='/img/favicon.png' property="og:image" />
 
-        {type === 'note' ? (
-          <meta content="article" property="og:type"></meta>
-        ) : (
-          <meta content="website" property="og:type"></meta>
-        )}
+      {type === 'note' ? (
+        <meta content="article" property="og:type"></meta>
+      ) : (
+        <meta content="website" property="og:type"></meta>
+      )}
 
-        <title>{pageTitle}</title>
+      <title>{pageTitle}</title>
 
-        <link rel="apple-touch-icon" href="/img/favicon.png" />
-        <link
-          rel="icon"
-          href="/img/favicon.png"
-          type="image/png"
-          sizes="16x16"
-        />
-        {/*
-          These are included using gatsby-browser.js - if I include these like shown here, there is a horrible FOUC
-        <link href="/css/style.css" rel="stylesheet" media="all" className="default" />
-        <link href="/css/main.css" rel="stylesheet" media="all" className="default" />
-        <link href="/css/custom.css" rel="stylesheet" media="all" className="default" />
-        <link href="/css/Util.css" rel="stylesheet" media="all" className="default" />
-        */}
-      </Helmet>
+      <link rel="apple-touch-icon" href="/img/favicon.png" />
+      <link
+        rel="icon"
+        href="/img/favicon.png"
+        type="image/png"
+        sizes="16x16"
+      />
+      {/*
+        These are included using gatsby-browser.js - if I include these like shown here, there is a horrible FOUC
+      <link href="/css/style.css" rel="stylesheet" media="all" className="default" />
+      <link href="/css/main.css" rel="stylesheet" media="all" className="default" />
+      <link href="/css/custom.css" rel="stylesheet" media="all" className="default" />
+      <link href="/css/Util.css" rel="stylesheet" media="all" className="default" />
+      */}
 
       <nav
         className="navbar is-transparent"
