@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -r /home/dave/nonlinearfunction/gatsby-garden
+rm -rf /home/dave/nonlinearfunction/gatsby-garden
 set -e
 
 cd /home/dave/nonlinearfunction/
