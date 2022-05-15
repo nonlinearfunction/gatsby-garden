@@ -4,22 +4,48 @@ import { useFlexSearch } from 'react-use-flexsearch'
 import siteConfig from '../../gatsby-config'
 import '../styles/search.css'
 
+
+const SearchResults = ({showExcerpt, query, index, store}) => {
+  const results = useFlexSearch(query, index, store);
+  const resultsCode = (<div><ul>
+        {results.map(result => (
+              <li key={siteConfig.siteMetadata.notesPrefix + result.slug}>
+                <Link to={siteConfig.siteMetadata.notesPrefix + result.slug}>{result.title}</Link>
+                {showExcerpt ? <p>{result.excerpt}</p> : null}
+              </li>
+            ))}
+        </ul></div>)
+  const noResultsCode = (<div>No results for "{query}".</div>)
+  return results.length > 0 ? resultsCode : noResultsCode
+}
+
 export default function Search({ showExcerpt, size }) {
   // Needed for search functionality
-  const searchStore = useStaticQuery(graphql`
+  const urls = useStaticQuery(graphql`
     {
       localSearchNotesIndex {
-        index
-        store
+        publicIndexURL
+        publicStoreURL
       }
     }
   `)
 
-  const index = searchStore.localSearchNotesIndex.index
-  const store = searchStore.localSearchNotesIndex.store
-
   const [query, setQuery] = React.useState('')
-  const results = useFlexSearch(query, index, store)
+  const [index, setIndex] = React.useState(null)
+  const [store, setStore] = React.useState(null)
+
+  // Load index asynchronously.
+  React.useEffect(() => {
+    async function fetchData() {
+      const queries = await Promise.all([
+        fetch(urls.localSearchNotesIndex.publicIndexURL),
+        fetch(urls.localSearchNotesIndex.publicStoreURL),
+      ]);
+      setIndex(await queries[0].text());
+      setStore(await queries[1].json());
+    }
+    fetchData();
+  }, [urls])
 
   let inputClassName = 'input is-small'
   if (size === 'medium') {
@@ -27,35 +53,31 @@ export default function Search({ showExcerpt, size }) {
   }
 
   return (
-    <form className="search-form" action="/">
-      <span>{searchStore.localSearchNotesIndex.publicStoreURL}</span>
+    <form className="search-form">
       <input
         className={inputClassName}
         type="text"
         placeholder="Search"
         aria-label="Search..."
-        name="filter"
         value={query}
         onChange={event => setQuery(event.target.value)}
       />
-      {results.length ? (
-        <div className="search-result">
-          <ul>
-            {results.map(result => (
-              <li key={siteConfig.siteMetadata.notesPrefix + result.slug}>
-                <Link to={siteConfig.siteMetadata.notesPrefix + result.slug}>{result.title}</Link>
-                {showExcerpt ? <p>{result.excerpt}</p> : null}
-              </li>
-            ))}
-          </ul>
-          <button
-            className="close-search button-link"
-            onClick={() => setQuery('')}
-          >
-            Close
-          </button>
-        </div>
-      ) : null}
+      { query ? (
+    <div className="search-result">
+      {store && index ? (
+        <SearchResults
+          showExcerpt={showExcerpt}
+          query={query}
+          index={index}
+          store={store}/>
+      ): (<div>Loading search index...</div>)}
+      <button
+        className="close-search button-link"
+        onClick={() => setQuery('')}
+      >
+        Close
+      </button>
+    </div>) : null}
     </form>
   )
 }

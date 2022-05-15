@@ -210,7 +210,7 @@ module.exports = {
 
         // Provide options to the engine. This is optional and only recommended for advanced users.
         // Note: Only the flexsearch engine supports options.
-        engineOptions: 'speed',
+        // engineOptions: 'default',
 
         // GraphQL query used to fetch all data for the search index. This is required.
         query: `
