@@ -5,15 +5,18 @@ import siteConfig from '../../gatsby-config'
 import '../styles/search.css'
 
 
-const SearchResults = ({showExcerpt, query, index, store}) => {
+const SearchResults = ({showExcerpt, query, index, store, onClick}) => {
   const results = useFlexSearch(query, index, store);
   const resultsCode = (<div><ul>
         {results.map(result => (
+          <Link to={siteConfig.siteMetadata.notesPrefix + result.slug} onClick={onClick}>
               <li key={siteConfig.siteMetadata.notesPrefix + result.slug}>
-                <Link to={siteConfig.siteMetadata.notesPrefix + result.slug}>{result.title}</Link>
+                {result.title}
                 {showExcerpt ? <p>{result.excerpt}</p> : null}
               </li>
-            ))}
+          </Link>
+            ))
+        }
         </ul></div>)
   const noResultsCode = (<div>No results for "{query}".</div>)
   return results.length > 0 ? resultsCode : noResultsCode
@@ -57,7 +60,7 @@ export default function Search({ showExcerpt, size }) {
       <input
         className={inputClassName}
         type="text"
-        placeholder="Search"
+        placeholder="Search..."
         aria-label="Search..."
         value={query}
         onChange={event => setQuery(event.target.value)}
@@ -69,7 +72,8 @@ export default function Search({ showExcerpt, size }) {
           showExcerpt={showExcerpt}
           query={query}
           index={index}
-          store={store}/>
+          store={store}
+          onClick={() => setQuery('')}/>
       ): (<div>Loading search index...</div>)}
       <button
         className="close-search button-link"
