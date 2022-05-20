@@ -15,6 +15,7 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-sharp`,
+    `gatsby-plugin-preact`,
     `gatsby-remark-images`,
     {
       resolve: `gatsby-source-filesystem`,
