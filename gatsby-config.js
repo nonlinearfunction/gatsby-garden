@@ -286,5 +286,14 @@ module.exports = {
         // More options defined here https://purgecss.com/configuration.html#options
       },
     },
+    {
+      resolve: `gatsby-plugin-nprogress`,
+      //options: {
+      // Setting a color is optional.
+      //  color: `tomato`,
+      // Disable the loading spinner.
+      //  showSpinner: false,
+      //},
+    },
   ],
 }
