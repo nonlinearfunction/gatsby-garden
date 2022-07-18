@@ -1,5 +1,6 @@
 const { paginate } = require(`gatsby-awesome-pagination`)
 const path = require(`path`)
+const moment = require(`moment`)
 const makeSlug = require(`./src/utils/make-slug`)
 const _ = require(`lodash`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
@@ -18,13 +19,20 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
       ? makeSlug(node.frontmatter.slug)
       : makeSlug(title)
     const fileNode = getNode(node.parent)
-    const date = node.frontmatter.date ? node.frontmatter.date : fileNode.mtime
+    const date = node.frontmatter.modified ? node.frontmatter.modified : fileNode.mtime
+    const sourceInstanceName = fileNode.sourceInstanceName
     const visibility = node.frontmatter.visibility
       ? node.frontmatter.visibility
       : 'public'
     const excerpt = node.frontmatter.excerpt
       ? node.frontmatter.excerpt
       : node.excerpt
+
+    const created_date = moment(node.frontmatter.created);
+    datePath = `/${created_date.format('YYYY')}/${created_date.format('MM')}`;
+    const intendedPath = (sourceInstanceName == 'posts') ? (
+        siteConfig.siteMetadata.postsPrefix + datePath + '/' + slug) : (
+        siteConfig.siteMetadata.notesPrefix + '/' + slug);
 
     // If you are adding new fields here, add it to createSchemaCustomization() as well.
 
@@ -53,8 +61,16 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
       name: `visibility`,
       value: visibility,
     })
-
-    // :TODO: Add tags. Ideally, every supported frontmatter should be added as a field.
+    createNodeField({
+      node,
+      name: "source",
+      value: sourceInstanceName,
+    })
+    createNodeField({
+      node,
+      name: "intended_url_path",
+      value: intendedPath,
+    })
   }
 }
 
@@ -71,6 +87,8 @@ exports.createPages = async ({ graphql, actions }) => {
               title
               visibility
               excerpt
+              source
+              intended_url_path
             }
             frontmatter {
               tags
@@ -142,8 +160,12 @@ exports.createPages = async ({ graphql, actions }) => {
     const title = node.fields.title ? node.fields.title : node.frontmatter.title
     const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
 
+    if (node.fields.source != 'notes'){
+      continue;
+    }
+
     createPage({
-      path: siteConfig.siteMetadata.notesPrefix + node.fields.slug,
+      path: node.fields.intended_url_path,
       component: path.resolve(`./src/templates/note.jsx`),
       context: {
         title: title,
@@ -164,6 +186,30 @@ exports.createPages = async ({ graphql, actions }) => {
         isPermanent: true,
       })
     }
+  }
+
+  // Create page for all posts.
+  for (let i = 0; i < result.data.allMdx.edges.length; i++) {
+    const node = result.data.allMdx.edges[i].node
+    const title = node.fields.title ? node.fields.title : node.frontmatter.title
+    const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
+
+    if (node.fields.source != 'posts'){
+      continue;
+    }
+
+    createPage({
+      path: node.fields.intended_url_path,
+      component: path.resolve(`./src/templates/post.jsx`),
+      context: {
+        title: title,
+        slug: node.fields.slug,
+        refersTo: refersTo[title] ? refersTo[title] : [],
+        referredBy: referredBy[title] ? referredBy[title] : [],
+        created: node.frontmatter.created,
+        modified: node.frontmatter.modified,
+      },
+    })
   }
 
   // Handle all tag pages.
@@ -265,6 +311,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       visibility: String
       excerpt: String
+      source: String
+      intended_url_path: String
     }
 
     """

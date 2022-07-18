@@ -1,8 +1,8 @@
-import React from 'react'
 import { graphql, Link } from 'gatsby'
-import Layout from '../layout/layout'
+import React from 'react'
 import NoteList from '../components/note-list'
 import Pager from '../components/pager'
+import Layout from '../layout/layout'
 
 export default function Tag({ pageContext, data }) {
   const { tag } = pageContext
@@ -47,6 +47,7 @@ export const query = graphql`
             title
             date
             excerpt
+            intended_url_path
           }
           frontmatter {
             tags

@@ -1,14 +1,14 @@
-import React from 'react'
 import { Link, navigate } from 'gatsby'
-import '../styles/note.css'
+import React from 'react'
 import siteConfig from '../../gatsby-config'
+import '../styles/note.css'
 
 export default function NoteList({ notes }) {
   notes.sort((data, index) => {return data.node.fields.slug})
   return (
     <div className="block note-cards note-list">
       {notes.map((data, index) => (
-        <Link to={siteConfig.siteMetadata.notesPrefix + data.node.fields.slug}>
+        <Link to={data.node.fields.intended_url_path}>
         <div
           className="note-area box-feed"
           key={index}

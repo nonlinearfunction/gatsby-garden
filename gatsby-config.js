@@ -7,6 +7,7 @@ module.exports = {
 
     siteUrl: `https://nonlinearfunction.org/`, // URL at which your site will be published. This should be present if you want RSS feed.
     notesPrefix: `/notes`,
+    postsPrefix: `/posts`,
     headerMenu: [ // Top Navbar items
        {type: 'note', item: 'about', title: 'About'}, // Type can be 'page', 'note', 'tag', or 'link'
        {type: 'page', item: 'all', title: 'All Notes'},
@@ -29,6 +30,13 @@ module.exports = {
       options: {
         name: `notes`,
         path: `${__dirname}/_notes/`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `posts`,
+        path: `${__dirname}/_posts/`,
       },
     },
     {
@@ -156,7 +164,6 @@ module.exports = {
           site {
             siteMetadata {
               siteUrl
-              notesPrefix
             }
           }
           allSitePage {
@@ -170,6 +177,8 @@ module.exports = {
             nodes {
               fields {
                 slug
+                source
+                intended_url_path
               }
               frontmatter {
                 modified
@@ -183,7 +192,7 @@ module.exports = {
         }) => {
           const pathToDateMap = {};
           allPosts.map(post => {
-            pathToDateMap['/notes' + post.fields.slug] = post.frontmatter.modified;
+            pathToDateMap[post.fields.intended_url_path] = post.frontmatter.modified;
           });
       
           const pages = allPages.map(page => {
@@ -232,6 +241,7 @@ module.exports = {
                   title
                   slug
                   excerpt
+                  intended_url_path
                 }
                 frontmatter {
                   tags
@@ -253,7 +263,7 @@ module.exports = {
         // List of keys to store and make available in your UI. The values of
         // the keys are taken from the normalizer function below.
         // Default: all fields
-        store: ['id', 'slug', 'title', 'excerpt'],
+        store: ['id', 'slug', 'url_path', 'title', 'excerpt'],
 
         // Function used to map the result from the GraphQL query. This should
         // return an array of items to index in the form of flat objects
@@ -263,6 +273,7 @@ module.exports = {
           data.allMdx.nodes.map(node => ({
             id: node.id,
             slug: node.fields.slug,
+            url_path: node.fields.intended_url_path,
             title: node.fields.title,
             excerpt: node.fields.excerpt ? node.fields.excerpt : node.excerpt,
             tags: node.frontmatter.tags,

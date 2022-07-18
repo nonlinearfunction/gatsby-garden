@@ -1,15 +1,10 @@
-import React from 'react'
 import { Link } from 'gatsby'
-import { startCase, camelCase } from 'lodash'
+import { camelCase, startCase } from 'lodash'
+import React from 'react'
 import siteConfig from '../../gatsby-config'
 import Search from '../components/search'
 import {
-  DefaultMenuStructure,
-  MenuItemPage,
-  MenuItemText,
-  MenuItemNote,
-  MenuItemTag,
-  MenuItemExternalLink,
+  DefaultMenuStructure, MenuItemExternalLink, MenuItemNote, MenuItemPage, MenuItemTag, MenuItemText
 } from '../utils/menu-structure'
 
 export default function Header({ title, type, description }) {
@@ -32,7 +27,7 @@ export default function Header({ title, type, description }) {
       ) : null}
       <meta content='/img/favicon.png' property="og:image" />
 
-      {type === 'note' ? (
+      {type === 'note' || type === 'post' ? (
         <meta content="article" property="og:type"></meta>
       ) : (
         <meta content="website" property="og:type"></meta>

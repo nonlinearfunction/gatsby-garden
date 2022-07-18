@@ -1,0 +1,110 @@
+@import "variables.css";
+
+.post-area .post-title {
+  margin: 0 5px;
+  padding: 0 5px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.post-dates {
+  font-size: 80%;
+  opacity: 100%;}
+
+.post-dates-label {
+  font-variant: small-caps;
+}
+
+.post-tags h6,
+.post-tags ul,
+.post-tags li {
+  display: inline;
+}
+.post-tags ul {
+  padding: 0;
+}
+.post-area .post-tags li::after {
+  content: ", ";
+}
+.post-area .post-tags li:last-child:after {
+  content: "";
+}
+
+.post-references,
+.post-tags,
+.post-graph,
+.post-meta,
+.post-content {
+  margin: 0px;
+}
+
+.post-content img {
+  max-width: 100% !important;
+}
+.post-content a {
+  color: var(--link) !important;
+}
+.post-content table {
+  width: 100%;
+  border-top: 1px solid var(--bg-sub);
+  margin: 20px 0;
+}
+.post-content table tr {
+  border-bottom: 1px solid var(--bg-sub);
+}
+.post-content table td,
+.post-content table th {
+  padding: 5px;
+}
+
+.post-content blockquote {
+  background: var(--bg-sub);
+  border-left: 10px solid var(--border);
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+.post-content blockquote::before {
+  color: var(--border);
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+.post-content blockquote p {
+  display: inline;
+}
+.post-content code {
+  color: var(--text-sub);
+}
+
+.post-list .post-area {
+  padding: 10px;
+}
+.post-area .post-title {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+.post-area .post-excerpt {
+  margin: 0;
+}
+.post-meta p, .post-meta div {
+  margin: 0;
+  opacity: .8;
+  font-size: .9em;
+}
+.post-list .post-tag-list {
+  margin: 0;
+  color: #999;
+  font-size: small;
+}
+.post-list .post-date {
+  margin: 0;
+  color: #666;
+  font-size: small;
+}
+.post-list .post-area:nth-child(odd) {
+  background-color: var(--bg-sub);
+}

@@ -1,10 +1,13 @@
 import itertools
 import os
-import shutil
 import re
+import shutil
 
 NOTES_STAGING_DIR = '/home/dave/sync/suffering'
+POSTS_STAGING_DIR = '/home/dave/sync/suffering/posts'
+
 NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
+POSTS_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_posts'
 
 FIX_BLOCK_MATH_SUBSTITUTION = (r'(\n?)\$\$(\n?)', '\n$$\n')
 
@@ -54,7 +57,7 @@ def get_name_variants(name):
     variants = [(n.lower(), n.capitalize()) for n in names]
     return [' '.join(n) for n in list(itertools.product(*variants))]
 
-def get_substitutions(footnote=''):
+def get_notes_substitutions(footnote=''):
     """Builds the overall list of substitutions (including names) to apply."""
     substitutions = list(get_explicit_substitutions())
     substitutions.append(FIX_BLOCK_MATH_SUBSTITUTION)
@@ -70,33 +73,47 @@ def apply_substitutions(markdown, substitutions):
       markdown = re.sub(pattern, replacement, markdown)
    return markdown
 
-substitutions = get_substitutions()
+notes_substitutions = get_notes_substitutions()
+posts_substitutions = [FIX_BLOCK_MATH_SUBSTITUTION]
 
 # Remove all existing notes.
 if os.path.exists(NOTES_DIR):
   shutil.rmtree(NOTES_DIR)
+if os.path.exists(POSTS_DIR):
+  shutil.rmtree(POSTS_DIR)
 os.mkdir(NOTES_DIR)
+os.mkdir(POSTS_DIR)
 
-md_files = [s for s in os.listdir(NOTES_STAGING_DIR) if s.endswith('.md')]
+md_files_notes = [s for s in os.listdir(NOTES_STAGING_DIR) if s.endswith('.md')]
+md_files_posts = [s for s in os.listdir(POSTS_STAGING_DIR) if s.endswith('.md')]
 
 # Ensure no duplicates with conflicting capitalization.
 canonical_capitalization = {}
-for filename in md_files:
+for filename in md_files_notes:
     if filename.lower() in canonical_capitalization:
         raise ValueError(
             f'Saw notes with conflicting capitalizations {filename} and {canonical_capitalization[filename.lower()]}')
     canonical_capitalization[filename.lower()] = filename
 
 
-for filename in md_files:
+for filename in md_files_notes:
     with open(os.path.join(NOTES_STAGING_DIR, filename), 'r') as f:
         md_string = f.read()
     
     if 'publish: false' in get_front_matter(md_string):
         print(f"Publishing disabled for {filename}")
         continue
-    new_filename = apply_substitutions(filename, substitutions)
+    new_filename = apply_substitutions(filename, notes_substitutions)
     if new_filename != filename:
         print(f"Changed filename {filename} to {new_filename}")
     with open(os.path.join(NOTES_DIR, new_filename), 'w') as f:
-        f.write(apply_substitutions(md_string, substitutions))
+        f.write(apply_substitutions(md_string, notes_substitutions))
+
+for filename in md_files_posts:
+    with open(os.path.join(POSTS_STAGING_DIR, filename), 'r') as f:
+        md_string = f.read()
+    if 'publish: false' in get_front_matter(md_string):
+        print(f"Publishing disabled for {filename}")
+        continue
+    with open(os.path.join(POSTS_DIR, filename), 'w') as f:
+        f.write(apply_substitutions(md_string, posts_substitutions))

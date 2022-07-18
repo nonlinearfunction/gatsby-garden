@@ -1,7 +1,6 @@
+import { graphql, Link, useStaticQuery } from 'gatsby'
 import React from 'react'
-import { Link, useStaticQuery, graphql } from 'gatsby'
 import { useFlexSearch } from 'react-use-flexsearch'
-import siteConfig from '../../gatsby-config'
 import '../styles/search.css'
 
 
@@ -9,8 +8,8 @@ const SearchResults = ({showExcerpt, query, index, store, onClick}) => {
   const results = useFlexSearch(query, index, store);
   const resultsCode = (<div><ul>
         {results.map(result => (
-          <Link to={siteConfig.siteMetadata.notesPrefix + result.slug} onClick={onClick}>
-              <li key={siteConfig.siteMetadata.notesPrefix + result.slug}>
+          <Link to={result.url_path} onClick={onClick}>
+              <li key={result.slug}>
                 {result.title}
                 {showExcerpt ? <p>{result.excerpt}</p> : null}
               </li>
