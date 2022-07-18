@@ -15,6 +15,10 @@
   font-variant: small-caps;
 }
 
+.post-dates-updated {
+  opacity: 40%;
+}
+
 .post-tags h6,
 .post-tags ul,
 .post-tags li {

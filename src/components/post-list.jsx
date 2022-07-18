@@ -22,9 +22,6 @@ export default function PostList({ posts }) {
               {data.node.fields.title}
           </h4>
           <span className='post-dates-label'>Posted</span> {data.node.frontmatter.created}
-              { data.node.frontmatter.created === data.node.frontmatter.modified ? null : (
-                <span> (modified {data.node.frontmatter.modified})</span>
-              )}
           <p className="post-excerpt">
             {data.node.fields.excerpt
               ? data.node.fields.excerpt
