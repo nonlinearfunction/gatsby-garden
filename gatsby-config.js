@@ -10,7 +10,7 @@ module.exports = {
     postsPrefix: `/posts`,
     headerMenu: [ // Top Navbar items
        {type: 'note', item: 'about', title: 'About'}, // Type can be 'page', 'note', 'tag', or 'link'
-       {type: 'page', item: 'all', title: 'All Notes'},
+       {type: 'page', item: 'notes', title: 'All Notes'},
        {type: 'page', item: 'tags', title: 'Tags'},
      ],
   },

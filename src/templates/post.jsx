@@ -18,11 +18,19 @@ export default function Post({ pageContext, data }) {
             <div className="post-dates">
               <span className='post-dates-label'>Posted</span> {post.frontmatter.created}
               { post.frontmatter.created === post.frontmatter.modified ? null : (
-                <span className='post-dates-updated'> (updated {post.frontmatter.modified})</span>
+                <span className='post-dates-updated'> (last update {post.frontmatter.modified})</span>
               )}
             </div>            
             <div className="post-content">
               <MDXRenderer>{post.body}</MDXRenderer>
+            </div>
+            <hr className="post-footer"/>
+            <div>{pageContext.prev ? (
+              <span style='float:left'>Previous: <Link to={pageContext.prev.fields.intended_url_path}>{pageContext.prev.fields.title}</Link>.</span>
+              ) : null}
+              {pageContext.next ? (
+              <span style='float: right'>Next: <Link to={pageContext.next.fields.intended_url_path}>{pageContext.next.fields.title}</Link>.</span>
+              ) : null}
             </div>
           </div>
         </main>

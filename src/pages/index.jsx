@@ -20,7 +20,7 @@ export default function Home({data}) {
         </div>
         <div className="block" style={{display: 'block'}}>
           <h3>Recent Posts</h3>
-          <PostList posts={data.notes.edges} />
+          <PostList posts={data.posts.edges} />
           </div>
         <div className="block" style={{display: 'block'}}>
           <h4>Browse notes by tag:</h4>
@@ -37,16 +37,16 @@ export default function Home({data}) {
 
 export const query = graphql`
   query HomeQuery {
-    notes: allMdx(
+    posts: allMdx(
       filter: { fields: { 
         visibility: { eq: "public" }
         source: { eq: "posts" } 
       } }
-      sort: { fields: [slug] , order: ASC }
+      sort: { fields: [frontmatter___created, slug], order: DESC }
     ) {
       edges {
         node {
-          excerpt
+          excerpt(pruneLength: 300)
           fields {
             slug
             title

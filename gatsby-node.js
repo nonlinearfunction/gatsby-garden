@@ -79,7 +79,8 @@ exports.createPages = async ({ graphql, actions }) => {
   // Process for notes all public notes
   const result = await graphql(`
     query {
-      allMdx(filter: { fields: { visibility: { eq: "public" } } }) {
+      allMdx(sort: { fields: [frontmatter___created, slug], order: DESC }, 
+             filter: { fields: { visibility: { eq: "public" } } }) {
         edges {
           node {
             fields {
@@ -110,7 +111,11 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
   `)
-  const allNotes = _.get(result, `data.allMdx.edges`)
+  const allMdx = _.get(result, `data.allMdx.edges`)
+  const allNotes = allMdx.filter(note =>
+    note.node.fields.source == 'notes')
+  const allPosts = allMdx.filter(note =>
+      note.node.fields.source == 'posts')
 
   // Make a map of how notes link to other links. This is necessary to have back links and graph visualisation
   let refersTo = {} // refersTo['note title'] = ['note that "note title" linked to', 'another note that "note title" linked to', ...]
@@ -155,14 +160,10 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create page for all notes.
-  for (let i = 0; i < result.data.allMdx.edges.length; i++) {
-    const node = result.data.allMdx.edges[i].node
+  for (let i = 0; i < allNotes.length; i++) {
+    const node = allNotes[i].node
     const title = node.fields.title ? node.fields.title : node.frontmatter.title
     const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
-
-    if (node.fields.source != 'notes'){
-      continue;
-    }
 
     createPage({
       path: node.fields.intended_url_path,
@@ -189,14 +190,10 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create page for all posts.
-  for (let i = 0; i < result.data.allMdx.edges.length; i++) {
-    const node = result.data.allMdx.edges[i].node
+  for (let i = 0; i < allPosts.length; i++) {
+    const node = allPosts[i].node
     const title = node.fields.title ? node.fields.title : node.frontmatter.title
     const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
-
-    if (node.fields.source != 'posts'){
-      continue;
-    }
 
     createPage({
       path: node.fields.intended_url_path,
@@ -208,6 +205,8 @@ exports.createPages = async ({ graphql, actions }) => {
         referredBy: referredBy[title] ? referredBy[title] : [],
         created: node.frontmatter.created,
         modified: node.frontmatter.modified,
+        next: i === 0 ? null : allPosts[i - 1].node,
+        prev: i === (allPosts.length - 1) ? null : allPosts[i + 1].node
       },
     })
   }
@@ -241,9 +240,16 @@ exports.createPages = async ({ graphql, actions }) => {
     createPage,
     items: allNotes,
     itemsPerPage: 200,
-    pathPrefix: `/all`,
-    component: path.resolve(`./src/templates/sitemap.jsx`),
+    pathPrefix: `/notes`,
+    component: path.resolve(`./src/templates/all-notes.jsx`),
   })
+  paginate({
+      createPage,
+      items: allPosts,
+      itemsPerPage: 200,
+      pathPrefix: `/posts`,
+      component: path.resolve(`./src/templates/all-posts.jsx`),
+    })
 
   // Unlisted notes should be made a page.
   const privateNotes = await graphql(`
