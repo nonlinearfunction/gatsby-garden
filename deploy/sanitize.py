@@ -144,7 +144,7 @@ for filename in md_files_notes:
             f'Saw notes with conflicting capitalizations {filename} and {canonical_capitalization[filename.lower()]}'
         )
     canonical_capitalization[filename.lower()] = filename
-"""
+
 for filename in md_files_notes:
     with open(os.path.join(NOTES_STAGING_DIR, filename), 'r') as f:
         md_string = f.read()
@@ -157,7 +157,6 @@ for filename in md_files_notes:
         print(f"Changed filename {filename} to {new_filename}")
     with open(os.path.join(NOTES_DIR, new_filename), 'w') as f:
         f.write(apply_substitutions(md_string, notes_substitutions))
-"""
 
 for filename in md_files_posts:
     with open(os.path.join(POSTS_STAGING_DIR, filename), 'r') as f:
