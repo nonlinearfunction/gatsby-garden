@@ -1,11 +1,11 @@
-import React from 'react'
 import { graphql, Link } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
-import Layout from '../layout/layout'
-import siteConfig from '../../gatsby-config'
-import '../styles/note.css'
-import '../styles/graph.css'
 import "katex/dist/katex.min.css"
+import React from 'react'
+import siteConfig from '../../gatsby-config'
+import Layout from '../layout/layout'
+import '../styles/graph.css'
+import '../styles/note.css'
 
 const makeSlug = require('../utils/make-slug')
 
@@ -52,12 +52,12 @@ export default function Note({ pageContext, data }) {
                   <h5 className="block-title">Links to this note</h5>
                   <div className="related-wrapper">
                     {pageContext.referredBy.map((note, index) => (
-                      <div key={index} className="related-group">
-                        <Link to={siteConfig.siteMetadata.notesPrefix + '/' + makeSlug(note.title)}>
+                      <Link to={siteConfig.siteMetadata.notesPrefix + '/' + makeSlug(note.title)}>
+                        <div key={index} className="related-group">
                           <h4>{note.title}</h4>
                           <p className="related-excerpt">{note.excerpt}</p>
-                        </Link>
-                      </div>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 </div>
