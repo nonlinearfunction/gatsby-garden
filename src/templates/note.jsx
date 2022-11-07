@@ -41,7 +41,13 @@ export default function Note({ pageContext, data }) {
               </Link>
             </div>
 
-            <h1 className="note-title">{post.fields.title}</h1>
+            {post.fields.title == "about" ? null : (
+              <div>
+              <h1 className="note-title">{post.fields.title}</h1>
+              <em>This page is from <Link to="/notes/about">my personal notebook</Link>. I share these notes with the hope that some might be useful, but don't specifically review them for public consumption. Content here may be incomplete, incorrect, outdated, or just plain stupid, and may change at any point; please don't rely on it for anything important. :-)</em>
+              </div>
+              )
+            }
             <div className="note-content">
               <MDXRenderer>{post.body}</MDXRenderer>
             </div>
