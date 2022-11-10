@@ -44,7 +44,7 @@ export default function Note({ pageContext, data }) {
             {post.fields.title == "about" ? null : (
               <div>
               <h1 className="note-title">{post.fields.title}</h1>
-              <em>This page is from <Link to="/notes/about">my personal notes</Link>, and has not been specifically reviewed for public consumption. It may be incomplete, wrong, outdated, or stupid, and the content may change at any point. Caveat lector.</em>
+              <em>This page is from <Link to="/notes/about">my personal notes</Link>, and has not been specifically reviewed for public consumption. It might be incomplete, wrong, outdated, or stupid. Caveat lector.</em>
               </div>
               )
             }
