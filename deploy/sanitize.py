@@ -60,42 +60,32 @@ def get_explicit_substitutions():
 
 def read_private_names():
     """Loads names to replace and generates safe replacements."""
-    with open(os.path.join(NOTES_STAGING_DIR, 'private names.md'), 'r') as f:
-        s = strip_front_matter(f.read())
+    people_dir = os.path.join(NOTES_STAGING_DIR, 'people')
     names = []
-    for name_line in s.split('\n'):
-        r = name_line.split('->')
-        name = r[0].strip()
-        if not name:
+    for fname in os.listdir(people_dir):
+        if not fname.endswith(".md"):
             continue
-        if len(r) == 1:
-            safe_name = 'NameRedacted'
-        elif len(r) == 2:
-            safe_name = r[1].strip()
-        else:
-            raise ValueError(f'Invalid name line: {name_line}')
-        names.append((name, safe_name))
-    print("READ NAMES", names)
+        name = os.path.splitext(fname)[0]
+        with open(os.path.join(people_dir, fname), 'r') as f:
+            front_matter = get_front_matter(f.read())
+        print("read", os.path.join(people_dir, fname))
+        m = re.search(r'redact-as: (\S+)', front_matter)
+        # Redact all names by default unless explicitly tagged otherwise.
+        redact_as = m.group(1) if m else 'NameRedacted'
+        print(front_matter)
+        print(redact_as)
+        if redact_as.lower() == "false" or redact_as.lower() == "none":
+            continue
+        print(f"Redacting {name} as {redact_as}")
+        names.append((name, redact_as))
     return names
-
-
-def get_name_variants(name):
-    """'first last ->' ['first last', 'First last', 'first Last', 'First Last']."""
-    names = name.split(' ')
-    # TODO generate all capitalized varajnts
-    variants = [(n.lower(), n.capitalize()) for n in names]
-    return [' '.join(n) for n in list(itertools.product(*variants))]
 
 
 def get_notes_substitutions(footnote=''):
     """Builds the overall list of substitutions (including names) to apply."""
     substitutions = list(get_explicit_substitutions())
-    for name, safe_name in read_private_names():
-        for variant in get_name_variants(name):
-            # TODO: include footnotes
-            # TODO: somehow handle out-of-band usage so that 'Daniel Dennett' doesn't end up as 'Person_XXXX Dennett'
-            substitutions.append((r'(\b)' + variant + r'(\b)',
-                                  r'\g<1>' + safe_name + footnote + r'\g<2>'))
+    for name, redact_as in read_private_names():
+        substitutions.append((r'\[\[' + name + r'(|[^\]])*\]\]', redact_as))
     return substitutions
 
 
