@@ -14,3 +14,4 @@ for f in *; do cp "$f" "/home/dave/nonlinearfunction/gatsby-garden/_notes/attach
 cd /home/dave/nonlinearfunction/gatsby-garden/
 gatsby clean
 gatsby build
+npm cache clean --force

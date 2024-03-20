@@ -9,9 +9,15 @@ POSTS_STAGING_DIR = '/home/dave/sync/suffering/posts'
 NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
 POSTS_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_posts'
 
+IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'gif', 'png', 'svg', 'webp')
+
 FIX_BLOCK_MATH_SUBSTITUTION = (r'(\n?)\$\$(\n?)', '\n$$\n')
 
-IMAGE_WIKILINK_SUBSTITUTION = (r'!\[\[([^\n\]]+)\]\]', r'![](\g<1>)')
+IMAGE_WIKILINK_SUBSTITUTIONS = [(f'!\\[\\[([^\\n\\]]+\\.{ext})\\]\\]', r'![](\g<1>)') for ext in IMAGE_EXTENSIONS]
+EMBED_WIKILINK_MD_SUBSTITUTION = (r'!\[\[([^\n\]]+\.md)\]\]', '[[\\g<1>]]:\n<blockquote>\n`markdown:\\g<1>.md`\n</blockquote>')
+EMBED_WIKILINK_SUBSTITUTION = (r'!\[\[([^\n\]]+)\]\]', '[[\\g<1>]]:\n<blockquote>\n`markdown:\\g<1>.md`\n</blockquote>') 
+
+
 IMAGE_SPACE_TO_UNDERSCORE_SUBSTITUTION = (r'!\[([^\n\]]*)\]\(([^\n/ \)]+)( )',
                                           r'![\g<1>](\g<2>_')
 IMAGE_ATTACHMENTS_FOLDER_SUBSTITUTION = (r'!\[([^\n\]]*)\]\(([^\n/\)]+)\)',
@@ -23,8 +29,9 @@ ABSOLUTE_ATTACHMENTS_SUBSTITUTION = (r'\(attachments/',
                                      '(../_notes/attachments/')
 
 BASIC_SUBSTITUTIONS = [
-    FIX_BLOCK_MATH_SUBSTITUTION,
-    IMAGE_WIKILINK_SUBSTITUTION,
+    FIX_BLOCK_MATH_SUBSTITUTION ] + IMAGE_WIKILINK_SUBSTITUTIONS + [
+    EMBED_WIKILINK_MD_SUBSTITUTION,
+    EMBED_WIKILINK_SUBSTITUTION,
     # Hack to remove up to five spaces in an image filename.
     IMAGE_SPACE_TO_UNDERSCORE_SUBSTITUTION,
     IMAGE_SPACE_TO_UNDERSCORE_SUBSTITUTION,
