@@ -53,6 +53,14 @@ module.exports = {
         rehypePlugins: [require("rehype-katex")],
         gatsbyRemarkPlugins: [
           {
+            resolve: "gatsby-remark-embed-markdown",
+            options: {
+              // Example code links are relative to this dir.
+              // eg examples/path/to/file.js
+              directory: `${__dirname}/_notes/`,
+            }
+          },
+          {
             resolve: `gatsby-remark-prismjs`,
             options: {
               // Class prefix for <pre> tags containing syntax highlighting;

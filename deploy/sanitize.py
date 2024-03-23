@@ -14,8 +14,8 @@ IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'gif', 'png', 'svg', 'webp')
 FIX_BLOCK_MATH_SUBSTITUTION = (r'(\n?)\$\$(\n?)', '\n$$\n')
 
 IMAGE_WIKILINK_SUBSTITUTIONS = [(f'!\\[\\[([^\\n\\]]+\\.{ext})\\]\\]', r'![](\g<1>)') for ext in IMAGE_EXTENSIONS]
-EMBED_WIKILINK_MD_SUBSTITUTION = (r'!\[\[([^\n\]]+\.md)\]\]', '[[\\g<1>]]:\n<blockquote>\n`markdown:\\g<1>.md`\n</blockquote>')
-EMBED_WIKILINK_SUBSTITUTION = (r'!\[\[([^\n\]]+)\]\]', '[[\\g<1>]]:\n<blockquote>\n`markdown:\\g<1>.md`\n</blockquote>') 
+EMBED_WIKILINK_MD_SUBSTITUTION = (r'!\[\[([^\n\]]+\.md)\]\]', '[[\\g<1>]]:\n\n<blockquote>\n\n`markdown:\\g<1>.md`\n\n</blockquote>\n')
+EMBED_WIKILINK_SUBSTITUTION = (r'!\[\[([^\n\]]+)\]\]', '[[\\g<1>]]:\n\n<blockquote>\n\n`markdown:\\g<1>.md`\n\n</blockquote>\n') 
 
 
 IMAGE_SPACE_TO_UNDERSCORE_SUBSTITUTION = (r'!\[([^\n\]]*)\]\(([^\n/ \)]+)( )',
