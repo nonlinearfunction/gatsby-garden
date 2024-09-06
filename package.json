@@ -58,7 +58,7 @@
     "popper.js": "^1.16.1",
     "postcss": "^8.3.6",
     "preact": "^10.7.2",
-    "preact-render-to-string": "^5.2.0",
+    "preact-render-to-string": "^6.5.0",
     "prismjs": "^1.26.0",
     "puppeteer": "^10.2.0",
     "react": "^16.12.0",
