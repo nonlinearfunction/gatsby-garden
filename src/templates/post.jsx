@@ -26,10 +26,10 @@ export default function Post({ pageContext, data }) {
             </div>
             <hr className="post-footer"/>
             <div>{pageContext.prev ? (
-              <span style='float:left'>Previous: <Link to={pageContext.prev.fields.intended_url_path}>{pageContext.prev.fields.title}</Link>.</span>
+              <span style={{float: 'left'}}>Previous: <Link to={pageContext.prev.fields.intended_url_path}>{pageContext.prev.fields.title}</Link>.</span>
               ) : null}
               {pageContext.next ? (
-              <span style='float: right'>Next: <Link to={pageContext.next.fields.intended_url_path}>{pageContext.next.fields.title}</Link>.</span>
+              <span style={{float: 'right'}}>Next: <Link to={pageContext.next.fields.intended_url_path}>{pageContext.next.fields.title}</Link>.</span>
               ) : null}
             </div>
           </div>
