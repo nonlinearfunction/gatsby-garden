@@ -34,7 +34,10 @@ for filename in md_files:
     with open(os.path.join(NOTES_DIR, filename), 'r') as f:
         md_str = f.read()
     for s in trivial_notes:
-        new_md_str = re.sub(r'\[\[' + s + r'(\|([^\]]+))?\]\]',
+        # Escape special regex characters in s.
+        escaped_s = re.escape(s)
+        pattern = r'\[\[' + escaped_s + r'(\|([^\]]+))?\]\]'
+        new_md_str = re.sub(pattern,
                             lambda m: m.group(2) if m.group(2) else s,
                             md_str)
         if new_md_str != md_str:
