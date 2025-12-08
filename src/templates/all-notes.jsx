@@ -41,6 +41,7 @@ export const query = graphql`
           }
           frontmatter {
             tags
+            modified(formatString: "MMMM DD, YYYY")
           }
         }
       }

@@ -20,11 +20,14 @@ export default function NoteList({ notes }) {
         >
           <h4 className="note-title">
               {data.node.fields.title}
-          </h4>
+          </h4>          
           <p className="note-excerpt">
             {data.node.fields.excerpt
               ? data.node.fields.excerpt
               : data.node.excerpt}
+          </p>
+          <p className="note-date">
+            Modified: {data.node.frontmatter.modified}.
           </p>
           <p className="note-tag-list">
             Tagged with:{' '}
