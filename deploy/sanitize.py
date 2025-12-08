@@ -11,6 +11,8 @@ POSTS_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_posts'
 
 IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'gif', 'png', 'svg', 'webp')
 
+PRIVATE_TAGS = ('personal', 'ideas')
+
 FIX_BLOCK_MATH_SUBSTITUTION = (r'(\n?)\$\$(\n?)', '\n$$\n')
 
 IMAGE_WIKILINK_SUBSTITUTIONS = [(f'!\\[\\[([^\\n\\]]+\\.{ext})\\]\\]', r'![](\g<1>)') for ext in IMAGE_EXTENSIONS]
@@ -53,6 +55,23 @@ def get_front_matter(md_string):
         return m.group(0)
     return ''
 
+def should_publish(md_front_matter_string: str):
+    """Determine from a note's header if it should be published."""
+    md_front_matter_string = md_front_matter_string.lower()
+    
+    # Always respect the 'publish' attribute if present.
+    if 'publish: false' in md_front_matter_string:
+        return False
+    elif 'publish: true' in md_front_matter_string:
+        return True
+
+    # Tags not to publish.    
+    for private_tag in PRIVATE_TAGS:
+        if private_tag in md_front_matter_string:
+            return False
+        
+    return True
+    
 
 def get_explicit_substitutions():
     """Loads substitution regexes from a config file."""
@@ -158,7 +177,7 @@ for filename in md_files_notes:
 for filename in md_files_posts:
     with open(os.path.join(POSTS_STAGING_DIR, filename), 'r') as f:
         md_string = f.read()
-    if 'publish: false' in get_front_matter(md_string):
+    if not should_publish(get_front_matter(md_string)):
         print(f"Publishing disabled for {filename}")
         continue
     md_string = apply_substitutions(md_string, posts_substitutions)
