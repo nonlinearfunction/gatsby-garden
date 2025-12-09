@@ -150,6 +150,7 @@ module.exports = {
               stripBrackets: true
             }
           },
+          `@weknow/gatsby-remark-twitter`,
           `gatsby-remark-tufte`,
         ],
       },
