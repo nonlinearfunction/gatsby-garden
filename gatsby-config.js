@@ -49,7 +49,7 @@ module.exports = {
           [require("remark-disable-tokenizers"),
            {block: ['indentedCode']}],
         ],
-        rehypePlugins: [require("rehype-katex")],
+        rehypePlugins: [require("./plugins/rehype-katex-debug")],
         gatsbyRemarkPlugins: [
           {
             resolve: "gatsby-remark-embed-markdown",
@@ -150,7 +150,7 @@ module.exports = {
               stripBrackets: true
             }
           },
-          `@weknow/gatsby-remark-twitter`,
+          `./plugins/gatsby-remark-twitter-debug`,
           `gatsby-remark-tufte`,
         ],
       },
