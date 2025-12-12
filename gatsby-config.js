@@ -150,8 +150,8 @@ module.exports = {
               stripBrackets: true
             }
           },
-          `./plugins/gatsby-remark-twitter-debug`,
           `gatsby-remark-tufte`,
+          `./plugins/gatsby-remark-twitter-debug`,
         ],
       },
     },
