@@ -338,7 +338,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     type Frontmatter @infer {
       title: String
       date: Date @dateformat
-      tags: [String]
+      tags: [String] @deprecated(reason: "Use fields.normalizedTags instead - this field may contain inconsistent # prefixes")
       aliases: [String]
       slug: String
       source: String
