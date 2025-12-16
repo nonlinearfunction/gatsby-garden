@@ -77,13 +77,13 @@ export default function Note({ pageContext, data }) {
                       <Source src={post.frontmatter.source} />
                     ) : null}
 
-                    {post.frontmatter.tags ? (
+                    {post.fields.normalizedTags ? (
                       <div className="note-tags">
                         <strong className="note-meta-title">
                           Tagged With:{' '}
                         </strong>
                         <ul>
-                          {post.frontmatter.tags.map((tag, index) => (
+                          {post.fields.normalizedTags.map((tag, index) => (
                             <li key={index}>
                               <Link to={`/tags/${makeSlug(tag)}`}>{tag}</Link>
                             </li>
@@ -155,6 +155,7 @@ export const query = graphql`
       excerpt(pruneLength: 280)
       fields {
         title
+        normalizedTags
       }
       frontmatter {
         tags
