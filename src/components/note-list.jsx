@@ -31,8 +31,8 @@ export default function NoteList({ notes }) {
           </p>
           <p className="note-tag-list">
             Tagged with:{' '}
-            {data.node.frontmatter && data.node.frontmatter.tags
-              ? data.node.frontmatter.tags.map((tag, index) => (
+            {data.node.fields && data.node.fields.normalizedTags
+              ? data.node.fields.normalizedTags.map((tag, index) => (
                   <span>#{tag}</span>
                 ))
               : 'No Tags'}

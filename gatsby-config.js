@@ -284,7 +284,7 @@ module.exports = {
             url_path: node.fields.intended_url_path,
             title: node.fields.title,
             excerpt: node.fields.excerpt ? node.fields.excerpt : node.excerpt,
-            tags: node.frontmatter.tags,
+            tags: node.fields.normalizedTags,
             body: node.rawBody,
           })),
       },

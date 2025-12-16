@@ -28,6 +28,11 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
       ? node.frontmatter.excerpt
       : node.excerpt
 
+    // Normalize tags by stripping leading # symbols
+    const normalizedTags = node.frontmatter.tags
+      ? node.frontmatter.tags.map(tag => tag.replace(/^#+/, ''))
+      : []
+
     const created_date = moment(node.frontmatter.created);
     datePath = `/${created_date.format('YYYY')}/${created_date.format('MM')}`;
     const intendedPath = (sourceInstanceName == 'posts') ? (
@@ -71,6 +76,11 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
       name: "intended_url_path",
       value: intendedPath,
     })
+    createNodeField({
+      node,
+      name: "normalizedTags",
+      value: normalizedTags,
+    })
   }
 }
 
@@ -105,7 +115,7 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
       tags: allMdx(limit: 2000) {
-        group(field: frontmatter___tags) {
+        group(field: fields___normalizedTags) {
           fieldValue
         }
       }
@@ -214,8 +224,8 @@ exports.createPages = async ({ graphql, actions }) => {
   // Handle all tag pages.
   result.data.tags.group.forEach(tag => {
     const taggedNotes = allNotes.filter(note =>
-      note.node.frontmatter.tags
-        ? note.node.frontmatter.tags.includes(tag.fieldValue)
+      note.node.fields.normalizedTags
+        ? note.node.fields.normalizedTags.includes(tag.fieldValue)
         : false
     )
     paginate({
@@ -319,6 +329,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       excerpt: String
       source: String
       intended_url_path: String
+      normalizedTags: [String]
     }
 
     """
@@ -327,7 +338,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     type Frontmatter @infer {
       title: String
       date: Date @dateformat
-      tags: [String]
+      tags: [String] @deprecated(reason: "Use fields.normalizedTags instead - this field may contain inconsistent # prefixes")
       aliases: [String]
       slug: String
       source: String

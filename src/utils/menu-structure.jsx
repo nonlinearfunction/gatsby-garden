@@ -17,7 +17,7 @@ export const DefaultMenuStructure = (menuType = 'main') => {
     graphql`
       query {
         allMdx(limit: 2000) {
-          group(field: frontmatter___tags) {
+          group(field: fields___normalizedTags) {
             fieldValue
             totalCount
           }
