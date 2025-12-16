@@ -34,8 +34,10 @@ export const query = graphql`
       skip: $skip
       limit: $limit
       filter: {
-        frontmatter: { tags: { in: [$tag] } }
-        fields: { visibility: { eq: "public" } }
+        fields: {
+          normalizedTags: { in: [$tag] }
+          visibility: { eq: "public" }
+        }
       }
     ) {
       totalCount
@@ -48,6 +50,7 @@ export const query = graphql`
             date
             excerpt
             intended_url_path
+            normalizedTags
           }
           frontmatter {
             tags
