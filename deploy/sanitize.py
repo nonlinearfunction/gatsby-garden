@@ -59,6 +59,31 @@ def get_front_matter(md_string):
         return m.group(0)
     return ''
 
+
+def normalize_tags_in_frontmatter(md_string):
+    """Strip leading # symbols from tags in frontmatter."""
+    front_matter = get_front_matter(md_string)
+    if not front_matter:
+        return md_string
+
+    # Find tags in array format: tags: [tag1, tag2, #tag3]
+    def normalize_tag_array(match):
+        tags_content = match.group(1)
+        # Strip leading # from each tag
+        normalized = re.sub(r'(^|,\s*)#+', r'\1', tags_content)
+        return f'tags: [{normalized}]'
+
+    normalized_fm = re.sub(r'tags: \[([^\]]+)\]', normalize_tag_array, front_matter)
+
+    # Find tags in list format:
+    # tags:
+    #   - tag1
+    #   - #tag2
+    normalized_fm = re.sub(r'^(\s*- )#+', r'\1', normalized_fm, flags=re.MULTILINE)
+
+    # Replace the old frontmatter with normalized version
+    return md_string.replace(front_matter, normalized_fm)
+
 def should_publish(md_front_matter_string: str):
     """Determine from a note's header if it should be published."""
     md_front_matter_string = md_front_matter_string.lower()
@@ -172,6 +197,8 @@ for filename in md_files_notes:
     if 'publish: false' in get_front_matter(md_string):
         print(f"Publishing disabled for {filename}")
         continue
+    # Normalize tags in frontmatter
+    md_string = normalize_tags_in_frontmatter(md_string)
     new_filename = apply_substitutions(filename, notes_substitutions)
     if new_filename != filename:
         print(f"Changed filename {filename} to {new_filename}")
@@ -184,6 +211,8 @@ for filename in md_files_posts:
     if not should_publish(get_front_matter(md_string)):
         print(f"Publishing disabled for {filename}")
         continue
+    # Normalize tags in frontmatter
+    md_string = normalize_tags_in_frontmatter(md_string)
     md_string = apply_substitutions(md_string, posts_substitutions)
     md_string = rewrite_wikilinks(md_string)
     with open(os.path.join(POSTS_DIR, filename), 'w') as f:
