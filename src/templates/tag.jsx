@@ -37,6 +37,7 @@ export const query = graphql`
         fields: {
           normalizedTags: { in: [$tag] }
           visibility: { eq: "public" }
+          isDraft: { ne: true }
         }
       }
     ) {

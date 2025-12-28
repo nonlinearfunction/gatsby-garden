@@ -15,6 +15,11 @@ export default function Post({ pageContext, data }) {
         <main>
           <div className="post-area post-page-section">
             <Link to={post.fields.intended_url_path}><h1 className="post-title">{post.fields.title}</h1></Link>
+            {post.fields.isDraft ? (
+              <div className="notification is-warning">
+                <strong>Draft Post</strong> - This post is not publicly listed.
+              </div>
+            ) : null}
             <div className="post-dates">
               <span className='post-dates-label'>Posted</span> {post.frontmatter.created}
               { post.frontmatter.created === post.frontmatter.modified ? null : (
@@ -47,6 +52,7 @@ export const query = graphql`
       fields {
         title
         intended_url_path
+        isDraft
       }
       frontmatter {
         tags

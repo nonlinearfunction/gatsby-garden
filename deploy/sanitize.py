@@ -5,6 +5,7 @@ import shutil
 
 NOTES_STAGING_DIR = '/home/dave/sync/suffering'
 POSTS_STAGING_DIR = '/home/dave/sync/suffering/posts'
+DRAFT_POSTS_STAGING_DIR = '/home/dave/sync/suffering/post drafts'
 
 NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
 POSTS_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_posts'
@@ -142,6 +143,22 @@ def apply_substitutions(markdown, substitutions):
     return markdown
 
 
+def inject_draft_flag(md_string):
+    """Injects 'draft: true' into the frontmatter of a markdown string."""
+    front_matter = get_front_matter(md_string)
+    if not front_matter:
+        # No frontmatter, create one with draft flag
+        return '---\ndraft: true\n---\n' + md_string
+
+    # Check if draft flag already exists
+    if 'draft:' in front_matter.lower():
+        return md_string  # Already has draft flag, don't modify
+
+    # Insert draft: true into existing frontmatter (after the opening ---)
+    updated_front_matter = front_matter.replace('---\n', '---\ndraft: true\n', 1)
+    return md_string.replace(front_matter, updated_front_matter, 1)
+
+
 notes_substitutions = BASIC_SUBSTITUTIONS + get_notes_substitutions()
 posts_substitutions = BASIC_SUBSTITUTIONS
 
@@ -155,6 +172,7 @@ os.mkdir(POSTS_DIR)
 
 md_files_notes = [s for s in os.listdir(NOTES_STAGING_DIR) if s.endswith('.md')]
 md_files_posts = [s for s in os.listdir(POSTS_STAGING_DIR) if s.endswith('.md')]
+md_files_draft_posts = [s for s in os.listdir(DRAFT_POSTS_STAGING_DIR) if s.endswith('.md')] if os.path.exists(DRAFT_POSTS_STAGING_DIR) else []
 
 # Ensure no duplicates with conflicting capitalization.
 canonical_capitalization = {}
@@ -184,6 +202,20 @@ for filename in md_files_posts:
     if not should_publish(get_front_matter(md_string)):
         print(f"Publishing disabled for {filename}")
         continue
+    md_string = apply_substitutions(md_string, posts_substitutions)
+    md_string = rewrite_wikilinks(md_string)
+    with open(os.path.join(POSTS_DIR, filename), 'w') as f:
+        f.write(md_string)
+
+# Process draft posts from 'post drafts' directory
+for filename in md_files_draft_posts:
+    with open(os.path.join(DRAFT_POSTS_STAGING_DIR, filename), 'r') as f:
+        md_string = f.read()
+    if not should_publish(get_front_matter(md_string)):
+        print(f"Publishing disabled for draft post {filename}")
+        continue
+    # Inject draft: true flag
+    md_string = inject_draft_flag(md_string)
     md_string = apply_substitutions(md_string, posts_substitutions)
     md_string = rewrite_wikilinks(md_string)
     with open(os.path.join(POSTS_DIR, filename), 'w') as f:

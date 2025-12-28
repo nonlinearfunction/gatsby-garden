@@ -38,9 +38,10 @@ export default function Home({data}) {
 export const query = graphql`
   query HomeQuery {
     posts: allMdx(
-      filter: { fields: { 
+      filter: { fields: {
         visibility: { eq: "public" }
-        source: { eq: "posts" } 
+        source: { eq: "posts" }
+        isDraft: { ne: true }
       } }
       sort: { fields: [frontmatter___created, slug], order: DESC }
     ) {

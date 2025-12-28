@@ -24,6 +24,7 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
     const visibility = node.frontmatter.visibility
       ? node.frontmatter.visibility
       : 'public'
+    const isDraft = node.frontmatter.draft === true
     const excerpt = node.frontmatter.excerpt
       ? node.frontmatter.excerpt
       : node.excerpt
@@ -81,6 +82,11 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
       name: "normalizedTags",
       value: normalizedTags,
     })
+    createNodeField({
+      node,
+      name: "isDraft",
+      value: isDraft,
+    })
   }
 }
 
@@ -89,8 +95,8 @@ exports.createPages = async ({ graphql, actions }) => {
   // Process for notes all public notes
   const result = await graphql(`
     query {
-      allMdx(sort: { fields: [frontmatter___created, slug], order: DESC }, 
-             filter: { fields: { visibility: { eq: "public" } } }) {
+      allMdx(sort: { fields: [frontmatter___created, slug], order: DESC },
+             filter: { fields: { visibility: { eq: "public" }, isDraft: { ne: true } } }) {
         edges {
           node {
             fields {
@@ -305,6 +311,45 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   }
+
+  // Create drafts listing page
+  const draftPostsResult = await graphql(`
+    query {
+      allMdx(
+        filter: {
+          fields: {
+            source: { eq: "posts" }
+            isDraft: { eq: true }
+          }
+        }
+        sort: { fields: [frontmatter___created, slug], order: DESC }
+      ) {
+        edges {
+          node {
+            fields {
+              slug
+              title
+              excerpt
+              intended_url_path
+            }
+            frontmatter {
+              created
+              modified
+              tags
+            }
+          }
+        }
+      }
+    }
+  `)
+
+  createPage({
+    path: `/posts/drafts`,
+    component: path.resolve(`./src/templates/draft-posts.jsx`),
+    context: {
+      posts: draftPostsResult.data.allMdx.edges
+    },
+  })
 }
 
 exports.createSchemaCustomization = ({ actions }) => {
@@ -330,6 +375,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       source: String
       intended_url_path: String
       normalizedTags: [String]
+      isDraft: Boolean
     }
 
     """
@@ -344,6 +390,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       source: String
       visibility: String
       excerpt: String
+      draft: Boolean
     }
   `
   createTypes(typeDefs)

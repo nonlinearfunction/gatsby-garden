@@ -180,7 +180,7 @@ module.exports = {
             }
           }
           allMdx(filter: {
-            fields: { visibility: { eq: "public" } }
+            fields: { visibility: { eq: "public" }, isDraft: { ne: true } }
           }) {
             nodes {
               fields {
@@ -241,7 +241,7 @@ module.exports = {
         query: `
           {
             allMdx(filter: {
-                fields: { visibility: { eq: "public" } }
+                fields: { visibility: { eq: "public" }, isDraft: { ne: true } }
               }) {
               nodes {
                 id

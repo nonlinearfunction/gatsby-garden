@@ -1,32 +1,27 @@
 import { graphql } from 'gatsby'
 import React from 'react'
-import Pager from '../components/pager'
 import PostList from '../components/post-list'
 import Layout from '../layout/layout'
 
-export default function Sitemap({ pageContext, data }) {
+export default function DraftPosts({ data }) {
   return (
-    <Layout title="All Posts">
+    <Layout title="Draft Posts">
       <div className="column is-half">
-        <h1>All Posts</h1>
+        <h1>Draft Posts</h1>
+        <p><em>These posts are drafts and not visible on public pages.</em></p>
 
         <PostList posts={data.posts.edges} />
-
-        <Pager context={pageContext} />
       </div>
     </Layout>
   )
 }
 
 export const query = graphql`
-  query($skip: Int!, $limit: Int!) {
+  query {
     posts: allMdx(
-      skip: $skip
-      limit: $limit
       filter: { fields: {
-        visibility: { eq: "public" }
         source: { eq: "posts" }
-        isDraft: { ne: true }
+        isDraft: { eq: true }
       } }
       sort: { fields: [frontmatter___created, slug], order: DESC }
     ) {
