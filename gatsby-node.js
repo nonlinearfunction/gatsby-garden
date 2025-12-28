@@ -227,6 +227,71 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
+  // Create individual pages for draft posts (excluded from next/prev navigation)
+  const draftPosts = await graphql(`
+    query {
+      allMdx(
+        filter: {
+          fields: {
+            source: { eq: "posts" }
+            isDraft: { eq: true }
+          }
+        }
+      ) {
+        edges {
+          node {
+            fields {
+              slug
+              title
+              excerpt
+              intended_url_path
+            }
+            frontmatter {
+              tags
+              title
+              date
+              aliases
+              created
+              modified
+            }
+            excerpt
+            rawBody
+          }
+        }
+      }
+    }
+  `)
+  for (let i = 0; i < draftPosts.data.allMdx.edges.length; i++) {
+    const node = draftPosts.data.allMdx.edges[i].node
+    const title = node.fields.title ? node.fields.title : node.frontmatter.title
+    const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
+
+    createPage({
+      path: node.fields.intended_url_path,
+      component: path.resolve(`./src/templates/post.jsx`),
+      context: {
+        title: title,
+        slug: node.fields.slug,
+        refersTo: refersTo[title] ? refersTo[title] : [],
+        referredBy: referredBy[title] ? referredBy[title] : [],
+        created: node.frontmatter.created,
+        modified: node.frontmatter.modified,
+        next: null,  // No next/prev navigation for drafts
+        prev: null
+      },
+    })
+
+    // Handling Aliases for draft posts
+    for (let j = 0; j < aliases.length; j++) {
+      createRedirect({
+        fromPath: siteConfig.siteMetadata.postsPrefix + makeSlug(aliases[j]),
+        toPath: node.fields.intended_url_path,
+        redirectInBrowser: true,
+        isPermanent: true,
+      })
+    }
+  }
+
   // Handle all tag pages.
   result.data.tags.group.forEach(tag => {
     const taggedNotes = allNotes.filter(note =>
