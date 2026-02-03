@@ -3,10 +3,16 @@ import re
 import collections
 
 NOTES_DIR = '/home/dave/nonlinearfunction/gatsby-garden/_notes'
+NOTES_STAGING_DIR = '/home/dave/sync/suffering'
 
 md_files = [fname for fname in os.listdir(NOTES_DIR) if fname.endswith('.md')]
+staging_md_files = [fname for fname in os.listdir(NOTES_STAGING_DIR) if fname.endswith('.md')]
+people_md_files = [fname for fname in os.listdir(os.path.join(NOTES_STAGING_DIR, 'people')) if fname.endswith('.md')]
+# Some notes with `publish: false` exist only in the staging dir (because they *don't* exist
+# as far as the published site goes), but we want to treat them as existing so we don't
+# recreate new placeholder notes for them.
+existing_notes = set([fname[:-3] for fname in md_files + staging_md_files + people_md_files])
 
-existing_notes = [fname[:-3] for fname in md_files]
 refs = collections.defaultdict(int)
 linked_notes = set()
 
@@ -20,7 +26,7 @@ for filename in md_files:
     # print(f"File: {filename} wikilinks: {wikilinks}")
     linked_notes = linked_notes.union(wikilinks)
 
-new_notes = linked_notes - set(existing_notes)
+new_notes = linked_notes - existing_notes
 trivial_notes = set()
 for s in new_notes:
     if refs[s] > 1:
