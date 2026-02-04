@@ -96,8 +96,7 @@ exports.createPages = async ({ graphql, actions }) => {
   // Process for notes all public notes
   const result = await graphql(`
     query {
-      allMdx(sort: { fields: [frontmatter___created, slug], order: DESC },
-             filter: { fields: { visibility: { eq: "public" }, isDraft: { ne: true } } }) {
+      allMdx(sort: { fields: [frontmatter___created, slug], order: DESC }) {
         edges {
           node {
             fields {
@@ -107,6 +106,8 @@ exports.createPages = async ({ graphql, actions }) => {
               excerpt
               source
               intended_url_path
+              normalizedTags
+              isDraft
             }
             frontmatter {
               tags
@@ -130,17 +131,26 @@ exports.createPages = async ({ graphql, actions }) => {
   `)
   const allMdx = _.get(result, `data.allMdx.edges`)
   const allNotes = allMdx.filter(note =>
-    note.node.fields.source == 'notes')
+    note.node.fields.source == 'notes' &&
+    note.node.fields.visibility === 'public' &&
+    note.node.fields.isDraft !== true)
   const allPosts = allMdx.filter(note =>
-      note.node.fields.source == 'posts')
+      note.node.fields.source == 'posts' &&
+      note.node.fields.visibility === 'public' &&
+      note.node.fields.isDraft !== true)
 
   // Make a map of how notes link to other links. This is necessary to have back links and graph visualisation
   let refersTo = {} // refersTo['note title'] = ['note that "note title" linked to', 'another note that "note title" linked to', ...]
   let referredBy = {} // referredBy['note title'] = [{title: 'note that linked to "note title"' ...}, {title: 'another note that linked to "note title"', ...}, ...]
 
-  let linkageCache = {} // Caches all linking. To prevent duplicate linking. Eg. linkageCache['note title->linked note'] = true
+  const linkageCache = new Map() // Caches all linking. To prevent duplicate linking. Eg. linkageCache['note title->linked note'] = true
 
   const allNoteTitles = allNotes.map(note => note.node.fields.title) // A list of all note titles. Helps in finding the correct title in a case-insensitive manner.
+  const titleLookup = new Map()
+  for (const title of allNoteTitles) {
+    const normalizedTitle = title.toLowerCase()
+    if (!titleLookup.has(normalizedTitle)) titleLookup.set(normalizedTitle, title)
+  }
 
   // I didn't used the much more cleaner foreach because the `refersTo` was not working well with that.
   for (let i = 0; i < result.data.allMdx.edges.length; i++) {
@@ -154,15 +164,16 @@ exports.createPages = async ({ graphql, actions }) => {
 
     const outgoingLinks = findReferences(node.rawBody) // All outgoing links from this note
     refersTo[title] = outgoingLinks.map(outTitle =>
-      getPreExistingTitle(outTitle, allNoteTitles)
+      getPreExistingTitle(outTitle, titleLookup)
     )
 
     for (let j = 0; j < outgoingLinks.length; j++) {
       const tle = outgoingLinks[j]
-      const linkTitle = getPreExistingTitle(tle, allNoteTitles)
+      const linkTitle = getPreExistingTitle(tle, titleLookup)
 
       // Why this instead of just going thru the array to search? Optimizing. Might be premature. But, this function is already very slow.
-      if (linkageCache[title + '->' + linkTitle] !== undefined) continue
+      const linkageKey = title + '->' + linkTitle
+      if (linkageCache.has(linkageKey)) continue
 
       if (referredBy[linkTitle] === undefined) referredBy[linkTitle] = [] // If undefined, initialize
 
@@ -172,7 +183,7 @@ exports.createPages = async ({ graphql, actions }) => {
         slug: slug,
       })
 
-      linkageCache[title + '->' + linkTitle] = true
+      linkageCache.set(linkageKey, true)
     }
   }
 
@@ -213,7 +224,7 @@ exports.createPages = async ({ graphql, actions }) => {
       totalPosts: allPosts.length,
       totalRefersToKeys: Object.keys(refersTo).length,
       totalReferredByKeys: Object.keys(referredBy).length,
-      linkageCacheSize: Object.keys(linkageCache).length,
+      linkageCacheSize: linkageCache.size,
       sampleTitles,
       refersTo: refersToSample,
       referredBy: referredBySample,
@@ -280,41 +291,11 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create individual pages for draft posts (excluded from next/prev navigation)
-  const draftPosts = await graphql(`
-    query {
-      allMdx(
-        filter: {
-          fields: {
-            source: { eq: "posts" }
-            isDraft: { eq: true }
-          }
-        }
-      ) {
-        edges {
-          node {
-            fields {
-              slug
-              title
-              excerpt
-              intended_url_path
-            }
-            frontmatter {
-              tags
-              title
-              date
-              aliases
-              created
-              modified
-            }
-            excerpt
-            rawBody
-          }
-        }
-      }
-    }
-  `)
-  for (let i = 0; i < draftPosts.data.allMdx.edges.length; i++) {
-    const node = draftPosts.data.allMdx.edges[i].node
+  const draftPosts = allMdx.filter(note =>
+    note.node.fields.source == 'posts' &&
+    note.node.fields.isDraft === true)
+  for (let i = 0; i < draftPosts.length; i++) {
+    const node = draftPosts[i].node
     const title = node.fields.title ? node.fields.title : node.frontmatter.title
     const aliases = node.frontmatter.aliases ? node.frontmatter.aliases : []
 
@@ -385,34 +366,10 @@ exports.createPages = async ({ graphql, actions }) => {
     })
 
   // Unlisted notes should be made a page.
-  const privateNotes = await graphql(`
-    query {
-      allMdx(filter: { fields: { visibility: { eq: "unlisted" } } }) {
-        edges {
-          node {
-            fields {
-              slug
-              title
-              visibility
-              excerpt
-            }
-            frontmatter {
-              tags
-              title
-              date
-              aliases
-              created
-              modified
-            }
-            excerpt
-            rawBody
-          }
-        }
-      }
-    }
-  `)
-  for (let i = 0; i < privateNotes.data.allMdx.edges.length; i++) {
-    const node = privateNotes.data.allMdx.edges[i].node
+  const privateNotes = allMdx.filter(note =>
+    note.node.fields.visibility === 'unlisted')
+  for (let i = 0; i < privateNotes.length; i++) {
+    const node = privateNotes[i].node
     const title = node.fields.title ? node.fields.title : node.frontmatter.title
 
     createPage({
@@ -430,41 +387,22 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create drafts listing page
-  const draftPostsResult = await graphql(`
-    query {
-      allMdx(
-        filter: {
-          fields: {
-            source: { eq: "posts" }
-            isDraft: { eq: true }
-          }
-        }
-        sort: { fields: [frontmatter___created, slug], order: DESC }
-      ) {
-        edges {
-          node {
-            fields {
-              slug
-              title
-              excerpt
-              intended_url_path
-            }
-            frontmatter {
-              created
-              modified
-              tags
-            }
-          }
-        }
-      }
+  const draftPostsForListing = draftPosts.slice().sort((a, b) => {
+    const aCreated = a.node.frontmatter.created || ''
+    const bCreated = b.node.frontmatter.created || ''
+    if (aCreated === bCreated) {
+      const aSlug = a.node.fields.slug || ''
+      const bSlug = b.node.fields.slug || ''
+      return bSlug.localeCompare(aSlug)
     }
-  `)
+    return bCreated.localeCompare(aCreated)
+  })
 
   createPage({
     path: `/posts/drafts`,
     component: path.resolve(`./src/templates/draft-posts.jsx`),
     context: {
-      posts: draftPostsResult.data.allMdx.edges
+      posts: draftPostsForListing
     },
   })
 }
@@ -532,8 +470,8 @@ function findReferences(content) {
 }
 
 // This makes the keys case insensitive. [Permenent Notes] and [permenant notes] should be treated the same.
-function getPreExistingTitle(title, obj) {
-  const key = obj.find(key => key.toLowerCase() === title.toLowerCase())
+function getPreExistingTitle(title, titleLookup) {
+  const key = titleLookup.get(title.toLowerCase())
 
   if (key === undefined) return title // If obj is empty(first time its called) or we didn't find any match.
 
