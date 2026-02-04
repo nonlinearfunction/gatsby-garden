@@ -5,6 +5,7 @@ const makeSlug = require(`./src/utils/make-slug`)
 const _ = require(`lodash`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const siteConfig = require(`./gatsby-config`)
+const fs = require(`fs`)
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   if (node.internal.type === `Mdx`) {
@@ -172,6 +173,57 @@ exports.createPages = async ({ graphql, actions }) => {
       })
 
       linkageCache[title + '->' + linkTitle] = true
+    }
+  }
+
+  if (process.env.DEBUG_BACKLINKS === `1` || process.env.DEBUG_BACKLINKS === `true`) {
+    const rawTitles = process.env.DEBUG_BACKLINKS_TITLES
+    const debugPath = process.env.DEBUG_BACKLINKS_PATH || `/tmp/gatsby-backlinks-debug.json`
+
+    const uniqueTitles = Array.from(new Set(allNoteTitles))
+    uniqueTitles.sort((a, b) => a.localeCompare(b))
+
+    const sampleTitles = rawTitles
+      ? rawTitles.split(`,`).map(t => t.trim()).filter(Boolean)
+      : uniqueTitles.slice(0, 10)
+
+    const refersToSample = {}
+    const referredBySample = {}
+
+    for (const title of sampleTitles) {
+      const outgoing = refersTo[title] ? refersTo[title].slice() : []
+      outgoing.sort((a, b) => a.localeCompare(b))
+      refersToSample[title] = outgoing
+
+      const incoming = referredBy[title] ? referredBy[title].slice() : []
+      incoming.sort((a, b) => {
+        if (a.title === b.title) return a.slug.localeCompare(b.slug)
+        return a.title.localeCompare(b.title)
+      })
+      referredBySample[title] = incoming.map(item => ({
+        title: item.title,
+        slug: item.slug,
+      }))
+    }
+
+    const debugPayload = {
+      generatedAt: new Date().toISOString(),
+      totalEdges: result.data.allMdx.edges.length,
+      totalNotes: allNotes.length,
+      totalPosts: allPosts.length,
+      totalRefersToKeys: Object.keys(refersTo).length,
+      totalReferredByKeys: Object.keys(referredBy).length,
+      linkageCacheSize: Object.keys(linkageCache).length,
+      sampleTitles,
+      refersTo: refersToSample,
+      referredBy: referredBySample,
+    }
+
+    try {
+      fs.writeFileSync(debugPath, JSON.stringify(debugPayload, null, 2))
+      console.log(`[DEBUG_BACKLINKS] Wrote snapshot to ${debugPath}`)
+    } catch (error) {
+      console.warn(`[DEBUG_BACKLINKS] Failed to write snapshot: ${error.message}`)
     }
   }
 
