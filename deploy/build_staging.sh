@@ -12,6 +12,7 @@ cd /home/dave/sync/suffering/attachments/
 for f in *; do cp "$f" "/home/dave/nonlinearfunction/gatsby-garden/_notes/attachments/${f// /_}"; done
 # cp /home/dave/sync/suffering/attachments/* /home/dave/nonlinearfunction/gatsby-garden/_notes/attachments/
 cd /home/dave/nonlinearfunction/gatsby-garden/
+npm ci
 gatsby clean
 gatsby build
 npm cache clean --force
