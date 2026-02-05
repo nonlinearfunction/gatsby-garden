@@ -138,6 +138,9 @@ exports.createPages = async ({ graphql, actions }) => {
       note.node.fields.source == 'posts' &&
       note.node.fields.visibility === 'public' &&
       note.node.fields.isDraft !== true)
+  const publicNodes = allMdx.filter(note =>
+    note.node.fields.visibility === 'public' &&
+    note.node.fields.isDraft !== true)
 
   // Make a map of how notes link to other links. This is necessary to have back links and graph visualisation
   let refersTo = {} // refersTo['note title'] = ['note that "note title" linked to', 'another note that "note title" linked to', ...]
@@ -153,8 +156,8 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // I didn't used the much more cleaner foreach because the `refersTo` was not working well with that.
-  for (let i = 0; i < result.data.allMdx.edges.length; i++) {
-    const node = result.data.allMdx.edges[i].node
+  for (let i = 0; i < publicNodes.length; i++) {
+    const node = publicNodes[i].node
 
     const title = node.fields.title
     const slug = node.fields.slug
@@ -219,7 +222,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
     const debugPayload = {
       generatedAt: new Date().toISOString(),
-      totalEdges: result.data.allMdx.edges.length,
+      totalEdges: publicNodes.length,
       totalNotes: allNotes.length,
       totalPosts: allPosts.length,
       totalRefersToKeys: Object.keys(refersTo).length,
