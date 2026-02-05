@@ -23,7 +23,6 @@ module.exports = {
     //},
     `gatsby-plugin-catch-links`,
     `gatsby-plugin-sharp`,
-    `gatsby-remark-images`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
